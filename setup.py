@@ -1,35 +1,24 @@
 import os
-from setuptools import setup
-# Python setup file.
-# See http://packages.python.org/an_example_pypi_project/setuptools.html
+import json
+import sys
 
+def setup():
+    dictionary = {}
+    dirname = os.path.dirname(__file__)
+    filename = os.path.join(dirname, 'simulatortofmu/parser/setup.json')
+    modelica = input(r"Please provide the path to your openmodelica installation (e.g: C:\Users\Yournname\AppData\Roaming\.openmodelica\libraries):")
+    dictionary["modelica_path"] = modelica
+    with open(filename, "w") as f:
+        f.write(json.dumps(dictionary, indent=4))
+    if "3.7" not in sys.version:
+        raise SystemError("This Script explicitly requires Python Version 3.7.X")
+    pip = os.system("python -m pip install -r requirements.txt")
+    print(pip)
+    if pip:
+        pip3 = os.system("python -m pip install -r requirements.txt")
+    if pip and pip3:
+        raise SystemError("Did not find pip")
+    
 
-def read(fname):
-    return open(os.path.join(os.path.dirname(__file__), fname)).read()
-
-setup(
-    name="SimulatorToFMU",
-    version="1.0.0rc15",
-    author="Thierry S. Nouidui",
-    author_email="TSNouidui@lbl.gov",
-    description=("Package for exporting a Simulator as a Functional Mock-up Unit"),
-    long_description=read('README.rst'),
-    license="3-clause BSD",
-    url="https://github.com/LBNL-ETA/SimulatorToFMU/",
-    install_requires=['lxml',
-                      'jinja2'],
-    packages=['simulatortofmu'],
-    include_package_data=True,
-    classifiers=[
-        "Development Status :: 5 - Production/Stable",
-        "Environment :: Console",
-        "License :: OSI Approved :: BSD License",
-        "Programming Language :: Python :: 2.7",
-        "Programming Language :: Python :: 3.5",
-        "Programming Language :: Python :: 3.6",
-        "Intended Audience :: End Users/Desktop",
-        "Intended Audience :: Science/Research",
-        "Topic :: Scientific/Engineering",
-        "Topic :: Utilities"
-    ]
-)
+if __name__ == '__main__':
+    setup()

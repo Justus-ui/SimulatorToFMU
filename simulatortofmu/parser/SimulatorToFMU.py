@@ -198,6 +198,9 @@ import re
 import platform
 import random, string
 import struct
+import json
+from distutils.dir_util import copy_tree
+
 
 log.basicConfig(filename='simulator.log', filemode='w',
                 level=log.DEBUG, format='%(asctime)s %(message)s',
@@ -242,14 +245,23 @@ PYTHON_DLL_DIR = os.path.join(script_path, 'libraries', 'modelica',
 'SimulatorToFMU', 'Resources', 'Library')
 MODELICA_UTILITIES_H_OUT = os.path.join(MODELICA_UTILITIES_H_DIR, 'ModelicaUtilities.h')
 
-
 def main():
     """
     Main function to export a Simulator as an FMU.
 
-
     """
     import argparse
+    cur_path = os.getcwd()
+    rel_path = r"/SimulatortoFMU/simulatortofmu/fmus/openmodelica/windows"
+    dest_path = ""
+    for i, dir in enumerate(rel_path.split("/")):
+        if not(dir in cur_path):
+            rel_path.replace(f"/{dir}", "")
+            continue
+        dest_path = cur_path + rel_path
+        break
+    PATH_SAVED = os.path.normpath(dest_path)
+    os.chdir(os.path.normpath(dest_path))
 
     # Configure the argument parser
     parser = argparse.ArgumentParser(
@@ -586,9 +598,12 @@ def main():
     Simulator.rewrite_fmu()
 
     end = datetime.now()
-
+    Simulator.clean_lib()
     log.info('Export Simulator as an FMU in {!s} seconds.'.format(
         (end - start).total_seconds()))
+    Simulator.setup_FMU()
+    log.info("Extraction done, you can use the FMU from fmus/openmodelica/windows")
+
 
 
 def check_duplicates(arr):
@@ -801,6 +816,46 @@ class SimulatorToFMU(object):
         #self.tool_export = tool_export
         self.exec_target = exec_target
         self.module_name = ""
+
+    def clean_lib(self):
+        """
+            Removes the imported Modelica packages from libaries
+        """
+        persistent = ['bin', 'SimulatorToFMU']
+        path = os.path.normpath(os.getcwd().replace("fmus\openmodelica\windows", "parser\libraries\modelica"))
+        for objects in os.listdir(path):
+            if objects in persistent:
+                continue
+            datapath = os.path.join(path, objects)
+            if os.path.isdir(datapath):
+                shutil.rmtree(datapath)
+            else:
+                os.remove(datapath)
+
+    def setup_FMU(self):
+        """
+            Extracts the scripts and adds them to PYTHONPATH
+        """
+        ENVIORNMENT_PATH = os.path.join(os.getcwd(), f"{self.model_name}.scripts")
+        try:
+            os.mkdir(self.model_name)
+        except FileExistsError:
+            log.info("FMU already exists delete current FMU y/n")
+            if not (input() == "y"):
+                raise FileExistsError
+            shutil.rmtree(os.path.join(os.getcwd(), self.model_name))
+        import zipfile
+        with zipfile.ZipFile(f"{ENVIORNMENT_PATH}.zip", 'r') as zip_ref:
+            zip_ref.extractall(f"{ENVIORNMENT_PATH}")
+        shutil.move(ENVIORNMENT_PATH, os.path.join(os.getcwd(), self.model_name)) 
+        os.system(f""" setx PYTHONPATH "%PYTHONPATH%;{ENVIORNMENT_PATH}" """)
+        for files in os.listdir(os.getcwd()):
+            if self.model_name in files and not os.path.isdir(os.path.join(os.getcwd(), files)):
+                os.rename(os.path.join(os.getcwd(), files), os.path.join(os.getcwd(), f"{self.model_name}\\{files}"))
+
+
+
+        
 
     def xml_validator(self):
         """
@@ -1335,6 +1390,12 @@ class SimulatorToFMU(object):
             # Copy ModelicaUtilities.h to Resources folder for compilation
             if os.path.isfile(MODELICA_UTILITIES_H_IN):
                 shutil.copy2(MODELICA_UTILITIES_H_IN, MODELICA_UTILITIES_H_DIR)
+                import json
+                dest_dir = os.path.normpath(os.getcwd().replace("fmus\openmodelica\windows", "parser\libraries\modelica"))
+                with open(os.path.normpath(os.getcwd().replace("fmus\openmodelica\windows", "parser\setup.json")), "r") as f:
+                    source_dir = json.load(f)["modelica_path"]
+                copy_tree(source_dir, dest_dir)
+
             else:
                  s ='ModelicaUtilities.h is not available in {!s} \
                  This is required to compile OpenModelica FMUs.'.format(MODELICA_UTILITIES_H_IN)
