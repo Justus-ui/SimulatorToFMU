@@ -846,9 +846,9 @@ class SimulatorToFMU(object):
             shutil.rmtree(os.path.join(os.getcwd(), self.model_name))
         import zipfile
         with zipfile.ZipFile(f"{ENVIORNMENT_PATH}.zip", 'r') as zip_ref:
-            zip_ref.extractall(f"{ENVIORNMENT_PATH}")
-        shutil.move(ENVIORNMENT_PATH, os.path.join(os.getcwd(), self.model_name)) 
-        os.system(f""" setx PYTHONPATH "%PYTHONPATH%;{ENVIORNMENT_PATH}" """)
+            zip_ref.extractall(f"{os.getcwd()}\\{self.model_name}\\{self.model_name}.scripts")
+        #shutil.move(ENVIORNMENT_PATH, os.path.join(os.getcwd(), self.model_name)) 
+        os.system(f""" setx PYTHONPATH "%PYTHONPATH%;{os.path.join(os.getcwd(),os.path.join(self.model_name, f"{self.model_name}.scripts"))}" """)
         for files in os.listdir(os.getcwd()):
             if self.model_name in files and not os.path.isdir(os.path.join(os.getcwd(), files)):
                 os.rename(os.path.join(os.getcwd(), files), os.path.join(os.getcwd(), f"{self.model_name}\\{files}"))

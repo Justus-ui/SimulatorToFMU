@@ -5,5 +5,7 @@ Note this Repo is exclusivly meant to be run on Windows and Openmodelica V 1.21.
 4. Create you FMU as described in USer_Guide.pdf
     An Example Command looks like: 
     ../AppData/Local/Programs/Python/Python37-64/python.exe  SimulatorToFMU\simulatortofmu\parser\SimulatorToFMU.py -i "..\configuration.xml" -s "..\abc_wrapper.py" -hm true -pv 37
+    --> If the FMU already exists the program will ask you if you want to delete it
 5. You will see in the folder fmus/openmodelica/Windows/{model_name} your FMU, the script in {model_name}.scripts may bys altered after import
+6. Make sure fmus/openmodelica/Windows/{model_name}/{model_name}.scripts is added to your PYTHONPATH. Setx does not always work properly....
 
