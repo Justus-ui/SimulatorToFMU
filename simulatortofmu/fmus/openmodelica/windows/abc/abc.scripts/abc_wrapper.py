@@ -1,7 +1,5 @@
 # Dummy Python-driven simulator
-import numpy as np
-import random
-
+import os
 class Simulator():
     """
     Dummy simulator Python-driven simulator
@@ -14,15 +12,12 @@ class Simulator():
         self.input_values = input_values
 
 
-    def doTimeStep(self, memory):
+    def doTimeStep(self, input_values):
         """
         This function increments the input variables by 1
         """
-        with open(r"C:\Users\JP\Documents\TU Berlin\Projekt MDT\test.txt", "w") as f:
-            f.write("Hallo")
-        if memory is None:
-            return 0
-        return memory["All_Outs"][random.randrange(0, len(memory["All_Outs"]))]
+
+        return input_values + 1
 
 # Main Python function to be modified to interface with a simulator which has memory.
 def exchange(configuration_file, time, input_names,
@@ -61,15 +56,14 @@ def exchange(configuration_file, time, input_names,
     if memory == None:
         # Initialize the Simulator object
         s = Simulator(configuration_file, time, input_names,
-                        input_values, output_names, 1)
+                        input_values, output_names, write_results)
         # create the memory object
+        #memory = {'memory':s, 'tLast':[time]}
         memory = {'memory':s, 'tLast':time}
-        #memory = {'memory':s, 'tLast':time}
         # get and store the initial inputs
-        memory["All_Outs"] = []
         memory['inputsLast'] = input_values
         # get and store the initial outputs
-        memory['outputs'] = s.doTimeStep(None)
+        memory['outputs'] = s.doTimeStep(input_values)
         # store the memory object
         memory['s'] = s
     else:
@@ -78,20 +72,18 @@ def exchange(configuration_file, time, input_names,
         # Update the outputs of the Simulator if time has advanced
         if(abs(time - memory['tLast'])>1e-6):
             # Update the outputs
-            memory['outputs'] = (memory['s'].doTimeStep(memory))
+            memory['outputs'] = (memory['s'].doTimeStep(memory['outputs']))
             # Save last time
             memory['tLast'] = (time)
             # Save last input values
             memory['inputsLast'] = (input_values)
-            print(memory["outputs"])
 
     # Handle errors
-    #if memory['outputs'] < 0:
-    #        raise("The memory['outpus'] cannot be null")
+    if(memory['outputs'] < 0.0):
+            raise("The memory['outpus'] cannot be null")
     # Save the outputs of the Simulator
     #with open("memory.txt", "a") as f:
     #     f.write(memory)
-    memory["All_Outs"].append(memory['inputsLast'])
     output_values = memory['outputs']
     #########################################################################
     return [output_values, memory]

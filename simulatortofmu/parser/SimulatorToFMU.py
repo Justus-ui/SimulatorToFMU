@@ -251,17 +251,7 @@ def main():
 
     """
     import argparse
-    cur_path = os.getcwd()
-    rel_path = r"/SimulatortoFMU/simulatortofmu/fmus/openmodelica/windows"
-    dest_path = ""
-    for i, dir in enumerate(rel_path.split("/")):
-        if not(dir in cur_path):
-            rel_path.replace(f"/{dir}", "")
-            continue
-        dest_path = cur_path + rel_path
-        break
-    PATH_SAVED = os.path.normpath(dest_path)
-    os.chdir(os.path.normpath(dest_path))
+    os.chdir(os.path.normpath((os.path.abspath(__file__)).replace("parser\SimulatorToFMU.py", "fmus/openmodelica/windows")))
 
     # Configure the argument parser
     parser = argparse.ArgumentParser(
