@@ -837,7 +837,7 @@ class SimulatorToFMU(object):
         import zipfile
         with zipfile.ZipFile(f"{ENVIORNMENT_PATH}.zip", 'r') as zip_ref:
             zip_ref.extractall(f"{os.getcwd()}\\{self.model_name}\\{self.model_name}.scripts")
-        #shutil.move(ENVIORNMENT_PATH, os.path.join(os.getcwd(), self.model_name)) 
+        #### Adds script location to python path!
         os.system(f""" setx PYTHONPATH "%PYTHONPATH%;{os.path.join(os.getcwd(),os.path.join(self.model_name, f"{self.model_name}.scripts"))}" """)
         for files in os.listdir(os.getcwd()):
             if self.model_name in files and not os.path.isdir(os.path.join(os.getcwd(), files)):

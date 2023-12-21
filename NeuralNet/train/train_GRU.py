@@ -91,11 +91,11 @@ def visualize_model_prediction(model, file_name):
 
 if __name__ == "__main__":
     ## Adjustable parameters
-    show_data = False # will show some nice plots
+    show_data = True # will show some nice plots
     use_filter = False # will apply a 100 Hz lowpass to the measured signal
     minimum_delta = 0.1 # the minimal change in function value over a timeperiod 500 (tbd) ms to use as learning parameter
     load_model = False
-    sr = 0.001 #timeinterval[s] between samples a sample rate should be chosen s.t the signal may be uploaded to the Prüfstand e.g atleast 0.004
+    sr = 0.004 #timeinterval[s] between samples
     if sr < 0.0001:
         raise ValueError("sr to small, not enoug samples")
     Length_of_sample_s = 0.1 # Window length in seconds. Number of samples will be -> Length_of_samples_s / sr
