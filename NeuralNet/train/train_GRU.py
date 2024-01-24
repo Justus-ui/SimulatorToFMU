@@ -1,6 +1,6 @@
 import sys
 import os
-dirname =  dirname = os.path.dirname(__file__)
+dirname = os.path.dirname(__file__)
 sys.path.append(os.path.abspath(os.path.join(dirname, "../Model")))
 import numpy as np
 import pandas as pd
@@ -72,7 +72,7 @@ def train(model: "object", batch_size: "int", epochs: "int", Length_of_sample_s:
         loss_nd[epoch] = train_loss
     return loss_nd, DataLoader(test_data, batch_size = batch_size, shuffle = True)
     
-def visualize_model_prediction(model, file_name):
+def visualize_model_prediction(model, file_name, sr):
     base_path = r'C:\Users\JP\Documents\TU Berlin\ProjekteMDT_clea\SimulatorToFMU\NeuralNet\Data\Test_Data'
     path = os.path.join(base_path, file_name)
     df = pd.read_csv(path)
@@ -86,7 +86,8 @@ def visualize_model_prediction(model, file_name):
         prediction[i] = outs.item()
     plt.plot(time, model.denormalize(prediction), label = "predicition")
     plt.plot(time,label, label = "label")
-    plt.plot(time,sample)
+    plt.plot(time,sample, label = "sample")
+    plt.legend()
     plt.show()
 
 if __name__ == "__main__":
@@ -113,5 +114,5 @@ if __name__ == "__main__":
     test_loss = test_model(model, test, batch_size)
     log.info(f"Test_loss: {test_loss}")
     ###### Some Test #####
-    visualize_model_prediction(model,'Measurement2.csv')
+    visualize_model_prediction(model,'Measurement2.csv', sr)
     ###### Test_Measurements

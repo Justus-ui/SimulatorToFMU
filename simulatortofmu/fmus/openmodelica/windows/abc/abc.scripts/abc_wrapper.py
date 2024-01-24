@@ -1,10 +1,9 @@
 # Dummy Python-driven simulator
 import logging as log 
 try:
-    import os
-    import numpy as np 
     import torch
     from myGRU import GRUNet as gru
+    import math
 
 except Exception as e:
     log.error(e)
@@ -21,7 +20,7 @@ class Simulator():
         self.input_values = input_values
 
         self.model, self.sample_period = self.load_model()
-        self.sample_period = 0.01
+        self.sample_period = 0.004
         log.info("Sampled periode was set manually please change (!)")
         self.hidden = self.model.init_hidden(1)
     
@@ -67,11 +66,17 @@ def exchange(configuration_file, time, input_names,
         memory = {'memory':s, 'tLast':time}
         memory["output_value"] = s.doTimeStep(input_values)
         memory['s'] = s
+        memory['steps'] = 0
     else:
+        #log.warning(time)
         if(abs(time - memory['tLast']) >= memory['s'].sample_period):
             memory["output_value"] = memory['s'].doTimeStep(input_values)
+            #log.warning(abs(time - memory['tLast']))
+            #log.warning(memory['s'].sample_period)
+            memory['steps'] += 1
             memory['tLast'] = time
-    
+        if math.isclose(time, 5,rel_tol = 1e-3):
+            log.info("Absolute NUmber of steps take %s" % memory['steps'])
     if time < 0.005:
         memory["output_value"] = 0 ## Einschwingzeit
     return [memory["output_value"], memory]

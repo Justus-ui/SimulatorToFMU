@@ -1,15 +1,13 @@
 # Dummy Python-driven simulator
 import logging as log 
-
-    import os
-    import numpy as np 
-    import torch
-    
-    #sys.path.append(r"C:\Users\JP\Documents\TU Berlin\ProjekteMDT_clea\NeuralNet")
 try:
+    import torch
     from myGRU import GRUNet as gru
+    import math
+
 except Exception as e:
-    log.error("%i check if your script is included in PYTHONPATH " %e)
+    log.error(e)
+
 class Simulator():
     """
     Dummy simulator Python-driven simulator
@@ -21,22 +19,28 @@ class Simulator():
         self.configuration_file = configuration_file
         self.input_values = input_values
 
-        self.model = self.load_model()
+        self.model, self.sample_period = self.load_model()
+        self.sample_period = 0.004
+        log.info("Sampled periode was set manually please change (!)")
         self.hidden = self.model.init_hidden(1)
     
     def load_model(self):
         model = gru(1,128,1)
         model.load_model()
-        return model
+        return model, model.get_sr()
 
 
     def doTimeStep(self, input_value):
         """
         This function returns the predicted new output
         """
+        sign = 1
+        if input_value < 0:
+            input_value = abs(input_value)
+            sign = -1
         tensor = torch.tensor(input_value, dtype=torch.float32).reshape(1,1,1)
-        output, self.hidden = self.model.forward(tensor, self.hidden)
-        return self.model.denormalize(output.item())
+        output, self.hidden = self.model(tensor, self.hidden, prediction=True)
+        return sign * self.model.denormalize(output.item())
 
 # Main Python function to be modified to interface with a simulator which has memory.
 def exchange(configuration_file, time, input_names,
@@ -62,11 +66,19 @@ def exchange(configuration_file, time, input_names,
         memory = {'memory':s, 'tLast':time}
         memory["output_value"] = s.doTimeStep(input_values)
         memory['s'] = s
+        memory['steps'] = 0
     else:
-        if(abs(time - memory['tLast']) > 0):
+        #log.warning(time)
+        if(abs(time - memory['tLast']) >= memory['s'].sample_period):
             memory["output_value"] = memory['s'].doTimeStep(input_values)
+            #log.warning(abs(time - memory['tLast']))
+            #log.warning(memory['s'].sample_period)
+            memory['steps'] += 1
             memory['tLast'] = time
-    
+    if  math.isclose(time, 5, e-3):
+        log.warning("Absolute NUmber of steps take %s" memory["steps"])
+
+
     if time < 0.005:
         memory["output_value"] = 0 ## Einschwingzeit
     return [memory["output_value"], memory]
