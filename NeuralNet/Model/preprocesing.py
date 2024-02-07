@@ -25,7 +25,7 @@ def filter_noise(signal):
     a = 1
     return lfilter(b, a, signal)
 
-def get_samples(sample_length,sample: "np.array") -> "int, np.array[np.array]":
+def get_samples(sample_length,sample: "np.array") -> "(int, np.array[np.array])":
     print(sample.size, sample_length)
     num_samples = int(sample.size // sample_length)
     if num_samples < 1:
@@ -37,7 +37,7 @@ def get_samples(sample_length,sample: "np.array") -> "int, np.array[np.array]":
         samples[i, 1 : int((i + 1) * sample_length) + 1] =  sample[0 : int((i + 1) * sample_length)]#sample[int(i* sample_length) : int((i + 1) * sample_length)]
     return num_samples, samples
 
-def get_labels(sample_length,sample: "np.array") -> "int, np.array[np.array]":
+def get_labels(sample_length,sample: "np.array") -> "(int, np.array[np.array])":
     num_samples = int(sample.size // sample_length)
     #log.info(sample)
     if num_samples < 1:
@@ -82,6 +82,7 @@ def load_data(show_data = False, minmim_delta = 0.0, window_length = 0.5) -> "Ge
             plt.title("Filtered Signal")
             plt.legend()
             plt.show()
+            
         yield df.loc[df["is_oscilating"] == 1]
 
 def get_data(model : "object", Length_of_sample_s, sr:"int" = 0.0001, show_data = False, use_filter = True, minimum_delta = 0.0) -> "TensorDataset":

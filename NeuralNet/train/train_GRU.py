@@ -1,5 +1,6 @@
 import sys
 import os
+import math
 dirname = os.path.dirname(__file__)
 sys.path.append(os.path.abspath(os.path.join(dirname, "../Model")))
 import numpy as np
@@ -61,7 +62,7 @@ def train(model: "object", batch_size: "int", epochs: "int", Length_of_sample_s:
             train_loss += loss.item()
             loss.backward()
             optimizer.step()
-            if int(id_batch / len(dataloader) * 100) == percentage:
+            if math.isclose(((id_batch / len(dataloader)) * 100), percentage, rel_tol=10e-2) or (((id_batch / len(dataloader)) * 100) > percentage):
                  log.info(f"{percentage}% done")
                  percentage += percentage
         model.save_model()
@@ -92,9 +93,10 @@ def visualize_model_prediction(model, file_name, sr):
 
 if __name__ == "__main__":
     ## Adjustable parameters
-    show_data = True # will show some nice plots
+    show_data = False # will show some nice plots
     use_filter = False # will apply a 100 Hz lowpass to the measured signal
-    minimum_delta = 0.1 # the minimal change in function value over a timeperiod 500 (tbd) ms to use as learning parameter
+    minimum_delta = 0.1 # the minimal change in function value over a timeperiod 500 (tbd) ms to use as learning parameter, one has to be sure to chose delta, s.t the signal is continous to verify set show_data = True
+
     load_model = False
     sr = 0.004 #timeinterval[s] between samples
     if sr < 0.0001:

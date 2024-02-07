@@ -20,8 +20,8 @@ class Simulator():
         self.input_values = input_values
 
         self.model, self.sample_period = self.load_model()
-        self.sample_period = 0.004
-        log.info("Sampled periode was set manually please change (!)")
+        #self.sample_period = 0.004
+        #log.info("Sampled periode was set manually please change (!)")
         self.hidden = self.model.init_hidden(1)
     
     def load_model(self):
@@ -75,8 +75,8 @@ def exchange(configuration_file, time, input_names,
             #log.warning(memory['s'].sample_period)
             memory['steps'] += 1
             memory['tLast'] = time
-        if math.isclose(time, 5,rel_tol = 1e-3):
-            log.info("Absolute NUmber of steps take %s" % memory['steps'])
-    if time < 0.005:
+        #if math.isclose(time, 5,rel_tol = 1e-3):
+        #    log.info("Absolute NUmber of steps take %s" % memory['steps'])
+    if time < 0.009:
         memory["output_value"] = 0 ## Einschwingzeit
     return [memory["output_value"], memory]

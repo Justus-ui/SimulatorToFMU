@@ -33,6 +33,8 @@ block Generator
     Placement(visible = true, transformation(origin = {154, -70}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {110, -80}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Blocks.Interfaces.RealInput M annotation(
     Placement(visible = true, transformation(origin = {-100, 78}, extent = {{-20, -20}, {20, 20}}, rotation = 0), iconTransformation(origin = {-120, 0}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
+  Modelica.Blocks.Interfaces.RealOutput Ug annotation(
+    Placement(visible = true, transformation(origin = {64, -92}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {2, 110}, extent = {{-10, -10}, {10, 10}}, rotation = 90)));
 equation
   connect(integrator1.u, add3.y) annotation(
     Line(points = {{104, 4}, {60, 4}}, color = {0, 0, 127}));
@@ -66,6 +68,8 @@ equation
     Line(points = {{-30, 4}, {-22, 4}, {-22, -42}, {-32, -42}}, color = {0, 0, 127}));
   connect(M, gain.u) annotation(
     Line(points = {{-100, 78}, {-50, 78}}, color = {0, 0, 127}));
+  connect(gain3.y, Ug) annotation(
+    Line(points = {{-54, -76}, {-76, -76}, {-76, -92}, {64, -92}}, color = {0, 0, 127}));
   annotation(
     uses(Modelica(version = "4.0.0")),
     Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}})));

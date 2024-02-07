@@ -17,7 +17,7 @@ class GRUNet(nn.Module):
         dirname = os.path.dirname(__file__)
         self.feature_dict_path  = os.path.join(dirname, 'config.json')
         self.model_path = os.path.join(dirname, 'GRU.pth')
-        self.signal_started = False # will evaluate to True if an input > 0 has benn seen
+        self.signal_started = False # will evaluate to True if an input > 0 has been seen
 
     def calc_denormal_factor(self) -> float:
         """
@@ -25,7 +25,7 @@ class GRUNet(nn.Module):
         """
         with open(self.feature_dict_path, "r", encoding = 'utf-8') as f:
             feature_dict = json.load(f)
-        return (-feature_dict["0"]["min"] / (feature_dict["0"]["max"] - feature_dict["0"]["min"]))  
+        return (-feature_dict["0"]["min"] / (feature_dict["0"]["max"] - feature_dict["0"]["min"])) 
 
     def check_signal_started(self, x, outs):
         if x.shape[0] != 1 or x.shape[1] != 1: ## batchsize has to be 1 here

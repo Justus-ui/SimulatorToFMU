@@ -3,7 +3,6 @@ This model reads the output of the simulation (in the controlled case) and creat
 a measurement to upload to the Website to check if the system response is correct
 """
 
-
 import os
 import DyMat
 import matplotlib.pyplot as plt
@@ -13,7 +12,7 @@ from scipy import signal
 
 measurement_id = 18
 simulation_time = 5
-path = r"C:\Users\JP\AppData\Local\Temp\OpenModelica\OMEdit\Test_control" #path where corresponding .mat files are saved
+path = r"C:\Users\JP\AppData\Local\Temp\OpenModelica\OMEdit\Auswertung.Test_control" #path where corresponding .mat files are saved
 mat_file = [s for s in os.listdir(path) if s.endswith('_res.mat')]
 d = DyMat.DyMatFile(os.path.join(path, mat_file[0].replace('.mat', '')))
 pi_controller = d.data('limiter.y')
@@ -53,6 +52,7 @@ data = {"time": np.around(np.arange(0,simulation_time,0.004), decimals = 5),
         "voltage": np.around(filtered_signal, decimals = 5)}
 test_frame = pd.DataFrame(data)
 test_frame.to_csv(os.path.join(os.path.join(path_to_script, "Data"), f"Test_Measurement_{measurement_id}.csv"), index = False)
+print(f"Upload Data /Data/Test_Measurement_{measurement_id}.csv to Scheibenlaeufer Website and provide Measurement File Name")
 print("Measurement_file_name:")
 path = input()
 print(os.path.join(os.path.join(path_to_script, "Measurements"), path))
