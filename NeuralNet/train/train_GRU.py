@@ -38,7 +38,7 @@ def test_model(model, dataloader, batch_size):
     return test_loss
 
 def train(model: "object", batch_size: "int", epochs: "int", Length_of_sample_s: "float", sr: "float", show_data:bool = False, use_filter:bool = False, minimum_delta: "float" = 0.0) -> "tuple(np.array(float), DataLoader)":
-    loss_fn = torch.nn.MSELoss(reduction = "mean") # as it is closest
+    loss_fn = torch.nn.MSELoss(reduction = "mean") # as it is closest to enrms
     lr = .1
     optimizer = optim.RAdam(model.parameters(), lr = lr)
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer = optimizer, mode = 'min', patience = 5, verbose = True)
@@ -93,7 +93,7 @@ def visualize_model_prediction(model, file_name, sr):
 
 if __name__ == "__main__":
     ## Adjustable parameters
-    show_data = False # will show some nice plots
+    show_data = True # will show some nice plots
     use_filter = False # will apply a 100 Hz lowpass to the measured signal
     minimum_delta = 0.1 # the minimal change in function value over a timeperiod 500 (tbd) ms to use as learning parameter, one has to be sure to chose delta, s.t the signal is continous to verify set show_data = True
 

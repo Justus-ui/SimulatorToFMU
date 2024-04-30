@@ -1,9 +1,8 @@
 # Dummy Python-driven simulator
-import logging as log 
+import logging as log
 try:
     import torch
     from myGRU import GRUNet as gru
-    import math
 
 except Exception as e:
     log.error(e)

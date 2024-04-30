@@ -1,37 +1,277 @@
 package Auswertung
   model Test_control
-    abc_me_FMU abc_me_FMU1 annotation(
-      Placement(visible = true, transformation(origin = {-56, 52}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Modelica.Blocks.Continuous.PI pi(T = 2, k = 10) annotation(
-      Placement(visible = true, transformation(origin = {60, 58}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Last last annotation(
-      Placement(visible = true, transformation(origin = {-20, 52}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Modelica.Blocks.Math.Feedback feedback annotation(
-      Placement(visible = true, transformation(origin = {22, 58}, extent = {{10, 10}, {-10, -10}}, rotation = 90)));
-    Modelica.Blocks.Nonlinear.Limiter limiter(uMax = 5, uMin = 0) annotation(
-      Placement(visible = true, transformation(origin = {-6, 12}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
-    Modelica.Blocks.Sources.Step step(height = 1, startTime = 0.2) annotation(
-      Placement(visible = true, transformation(origin = {-12, 88}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Blocks.Sources.Step step1(height = 0, startTime = 0) annotation(
+      Placement(visible = true, transformation(origin = {44, -20}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
+  Modelica.Blocks.Logical.Or or1 annotation(
+      Placement(visible = true, transformation(origin = {-52, -28}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
+  Modelica.Blocks.Logical.Switch switch11 annotation(
+      Placement(visible = true, transformation(origin = {-10, -44}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
+  Modelica.Blocks.Sources.Step step(height = 1.5, startTime = 0.2) annotation(
+      Placement(visible = true, transformation(origin = {-30, 86}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  abc_me_FMU abc_me_FMU1(logLevel = 3) annotation(
+      Placement(visible = true, transformation(origin = {-58, 38}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Blocks.Logical.LessEqualThreshold lessEqualThreshold(threshold = 0.4) annotation(
+      Placement(visible = true, transformation(origin = {38, -54}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
+  Modelica.Blocks.Sources.Step step2(height = 5, startTime = 0) annotation(
+      Placement(visible = true, transformation(origin = {42, -86}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
+  Modelica.Blocks.Logical.GreaterThreshold greaterThreshold(threshold = 4.5) annotation(
+      Placement(visible = true, transformation(origin = {36, 14}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
+  Modelica.Blocks.Logical.Switch limiter annotation(
+      Placement(visible = true, transformation(origin = {-24, -2}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
+  Modelica.Blocks.Math.Add add(k1 = +1, k2 = -1) annotation(
+      Placement(visible = true, transformation(origin = {14, 52}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Blocks.Continuous.PI pi(k = 15)  annotation(
+      Placement(visible = true, transformation(origin = {60, 52}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   equation
-    connect(feedback.y, pi.u) annotation(
-      Line(points = {{22, 49}, {48, 49}, {48, 57}}, color = {0, 0, 127}));
-    connect(pi.y, limiter.u) annotation(
-      Line(points = {{71, 58}, {79, 58}, {79, 12}, {5, 12}}, color = {0, 0, 127}));
-    connect(feedback.u1, step.y) annotation(
-      Line(points = {{22, 66}, {22, 88}, {-1, 88}}, color = {0, 0, 127}));
-    connect(abc_me_FMU1.y, last.Ug) annotation(
-      Line(points = {{-45, 59}, {-39, 59}, {-39, 52}, {-32, 52}}, color = {0, 0, 127}));
-    connect(last.Ur, feedback.u2) annotation(
-      Line(points = {{-9, 59}, {-9, 57.2}, {13, 57.2}, {13, 57.4}}, color = {0, 0, 127}));
+    connect(add.u1, step.y) annotation(
+      Line(points = {{2, 58}, {-14, 58}, {-14, 86}, {-18, 86}}, color = {0, 0, 127}));
+    connect(step2.y, switch11.u3) annotation(
+      Line(points = {{31, -86}, {7, -86}, {7, -52}, {1, -52}}, color = {0, 0, 127}));
+    connect(lessEqualThreshold.y, switch11.u2) annotation(
+      Line(points = {{27, -54}, {11, -54}, {11, -44}, {1, -44}}, color = {255, 0, 255}));
+    connect(step1.y, switch11.u1) annotation(
+      Line(points = {{33, -20}, {7, -20}, {7, -36}, {1, -36}}, color = {0, 0, 127}));
+    connect(lessEqualThreshold.y, or1.u2) annotation(
+      Line(points = {{27, -54}, {21, -54}, {21, -60}, {-41, -60}, {-41, -36}}, color = {255, 0, 255}));
+    connect(abc_me_FMU1.y, add.u2) annotation(
+      Line(points = {{-47, 45}, {2, 45}, {2, 46}}, color = {0, 0, 127}));
+    connect(or1.y, limiter.u2) annotation(
+      Line(points = {{-63, -28}, {-73, -28}, {-73, 16}, {7, 16}, {7, -2}, {-13, -2}}, color = {255, 0, 255}));
+    connect(greaterThreshold.y, or1.u1) annotation(
+      Line(points = {{25, 14}, {15, 14}, {15, -28}, {-41, -28}}, color = {255, 0, 255}));
+    connect(switch11.y, limiter.u1) annotation(
+      Line(points = {{-21, -44}, {-27, -44}, {-27, -16}, {-1, -16}, {-1, 6}, {-13, 6}}, color = {0, 0, 127}));
     connect(limiter.y, abc_me_FMU1.x) annotation(
-      Line(points = {{-16, 12}, {-76, 12}, {-76, 60}, {-66, 60}}, color = {0, 0, 127}));
+      Line(points = {{-34, -2}, {-88, -2}, {-88, 46}, {-68, 46}}, color = {0, 0, 127}));
+  connect(add.y, pi.u) annotation(
+      Line(points = {{26, 52}, {48, 52}}, color = {0, 0, 127}));
+  connect(pi.y, lessEqualThreshold.u) annotation(
+      Line(points = {{71, 52}, {78, 52}, {78, -54}, {50, -54}}, color = {0, 0, 127}));
+  connect(pi.y, greaterThreshold.u) annotation(
+      Line(points = {{71, 52}, {57.5, 52}, {57.5, 14}, {48, 14}}, color = {0, 0, 127}));
+  connect(limiter.u3, pi.y) annotation(
+      Line(points = {{-12, -10}, {84, -10}, {84, 52}, {72, 52}}, color = {0, 0, 127}));
     annotation(
       uses(Modelica(version = "4.0.0")),
       Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}})));
   end Test_control;
 
+  block Generator
+    parameter Real Ra = 8.25;
+    parameter Real c = 51.5e-3;
+    parameter Real L = 0.375e-3;
+    parameter Real cu = 0.3248e-3;
+    parameter Real J = 47.5e-6;
+    parameter Real RL = 100;
+    Modelica.Blocks.Math.Gain gain(k = 1/J) annotation(
+      Placement(visible = true, transformation(origin = {-38, 78}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Modelica.Blocks.Math.Add3 add3(k1 = 1, k2 = -1, k3 = -1) annotation(
+      Placement(visible = true, transformation(origin = {48, 4}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Modelica.Blocks.Continuous.Integrator integrator1(k = 1) annotation(
+      Placement(visible = true, transformation(origin = {116, 4}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Modelica.Blocks.Math.Gain gain4(k = cu/J) annotation(
+      Placement(visible = true, transformation(origin = {54, -36}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
+    Modelica.Blocks.Interfaces.RealOutput y annotation(
+      Placement(visible = true, transformation(origin = {154, 76}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {110, 74}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Modelica.Blocks.Math.Gain gain5(k = RL) annotation(
+      Placement(visible = true, transformation(origin = {64, 76}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Modelica.Blocks.Math.Gain gain1(k = c/J) annotation(
+      Placement(visible = true, transformation(origin = {0, 4}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Modelica.Blocks.Math.Gain gain3(k = c/L) annotation(
+      Placement(visible = true, transformation(origin = {-44, -76}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
+    Modelica.Blocks.Continuous.Integrator integrator(k = 1) annotation(
+      Placement(visible = true, transformation(origin = {-42, 4}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Modelica.Blocks.Math.Gain gain2(k = (RL + Ra)/L) annotation(
+      Placement(visible = true, transformation(origin = {-44, -42}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
+    Modelica.Blocks.Math.Add add(k1 = 1, k2 = -1) annotation(
+      Placement(visible = true, transformation(origin = {-76, 4}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Modelica.Blocks.Interfaces.RealOutput w annotation(
+      Placement(visible = true, transformation(origin = {152, 4}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {110, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Modelica.Blocks.Interfaces.RealOutput wp annotation(
+      Placement(visible = true, transformation(origin = {154, -70}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {110, -80}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Modelica.Blocks.Interfaces.RealInput M annotation(
+      Placement(visible = true, transformation(origin = {-100, 78}, extent = {{-20, -20}, {20, 20}}, rotation = 0), iconTransformation(origin = {-120, 0}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
+    Modelica.Blocks.Interfaces.RealOutput Ug annotation(
+      Placement(visible = true, transformation(origin = {154, -92}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {2, 110}, extent = {{-10, -10}, {10, 10}}, rotation = 90)));
+    Modelica.Blocks.Math.Gain gain6(k = L) annotation(
+      Placement(visible = true, transformation(origin = {4, -92}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  equation
+    connect(integrator1.u, add3.y) annotation(
+      Line(points = {{104, 4}, {60, 4}}, color = {0, 0, 127}));
+    connect(integrator1.y, gain4.u) annotation(
+      Line(points = {{128, 4}, {134, 4}, {134, -36}, {66, -36}}, color = {0, 0, 127}));
+    connect(gain5.y, y) annotation(
+      Line(points = {{76, 76}, {154, 76}}, color = {0, 0, 127}));
+    connect(add3.u3, gain4.y) annotation(
+      Line(points = {{36, -4}, {36, -36}, {43, -36}}, color = {0, 0, 127}));
+    connect(add3.u2, gain1.y) annotation(
+      Line(points = {{36, 4}, {11, 4}}, color = {0, 0, 127}));
+    connect(gain3.u, integrator1.y) annotation(
+      Line(points = {{-32, -76}, {134, -76}, {134, 4}, {128, 4}}, color = {0, 0, 127}));
+    connect(integrator.y, gain1.u) annotation(
+      Line(points = {{-31, 4}, {-12, 4}}, color = {0, 0, 127}));
+    connect(add.y, integrator.u) annotation(
+      Line(points = {{-64, 4}, {-54, 4}}, color = {0, 0, 127}));
+    connect(gain2.y, add.u2) annotation(
+      Line(points = {{-55, -42}, {-116, -42}, {-116, -2}, {-88, -2}}, color = {0, 0, 127}));
+    connect(gain3.y, add.u1) annotation(
+      Line(points = {{-55, -76}, {-134, -76}, {-134, 10}, {-88, 10}}, color = {0, 0, 127}));
+    connect(integrator1.y, w) annotation(
+      Line(points = {{128, 4}, {152, 4}}, color = {0, 0, 127}));
+    connect(add3.y, wp) annotation(
+      Line(points = {{59, 4}, {86, 4}, {86, -70}, {154, -70}}, color = {0, 0, 127}));
+    connect(add3.u1, gain.y) annotation(
+      Line(points = {{36, 12}, {36, 45}, {18, 45}, {18, 78}, {-27, 78}}, color = {0, 0, 127}));
+    connect(integrator.y, gain2.u) annotation(
+      Line(points = {{-30, 4}, {-22, 4}, {-22, -42}, {-32, -42}}, color = {0, 0, 127}));
+    connect(M, gain.u) annotation(
+      Line(points = {{-100, 78}, {-50, 78}}, color = {0, 0, 127}));
+    connect(integrator.y, gain5.u) annotation(
+      Line(points = {{-30, 4}, {-22, 4}, {-22, 86}, {40, 86}, {40, 76}, {52, 76}}, color = {0, 0, 127}));
+    connect(gain3.y, gain6.u) annotation(
+      Line(points = {{-54, -76}, {-66, -76}, {-66, -92}, {-8, -92}}, color = {0, 0, 127}));
+    connect(gain6.y, Ug) annotation(
+      Line(points = {{16, -92}, {154, -92}}, color = {0, 0, 127}));
+    annotation(
+      uses(Modelica(version = "4.0.0")),
+      Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}})));
+  end Generator;
+
+  block Motor
+    parameter Real Ra = 8.25;
+    parameter Real c = 51.5e-3;
+    parameter Real L = 0.375e-3;
+    parameter Real cu = 0.3248e-3;
+    parameter Real J = 47.5e-6;
+    Modelica.Blocks.Interfaces.RealInput u annotation(
+      Placement(visible = true, transformation(origin = {-100, 62}, extent = {{-20, -20}, {20, 20}}, rotation = 0), iconTransformation(origin = {-120, 62}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
+    Modelica.Blocks.Interfaces.RealInput w annotation(
+      Placement(visible = true, transformation(origin = {-100, 4}, extent = {{-20, -20}, {20, 20}}, rotation = 0), iconTransformation(origin = {-118, 0}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
+    Modelica.Blocks.Interfaces.RealInput wp annotation(
+      Placement(visible = true, transformation(origin = {-100, -60}, extent = {{-20, -20}, {20, 20}}, rotation = 0), iconTransformation(origin = {-120, -58}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
+    Modelica.Blocks.Math.Gain gain(k = 1/L) annotation(
+      Placement(visible = true, transformation(origin = {-52, 62}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Modelica.Blocks.Math.Gain gain1(k = c/L) annotation(
+      Placement(visible = true, transformation(origin = {-54, 4}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Modelica.Blocks.Math.Gain gain2(k = J) annotation(
+      Placement(visible = true, transformation(origin = {-50, -60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Modelica.Blocks.Math.Add3 add3(k2 = -1, k3 = -1) annotation(
+      Placement(visible = true, transformation(origin = {-10, 54}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Modelica.Blocks.Math.Gain gain3(k = cu) annotation(
+      Placement(visible = true, transformation(origin = {-22, -16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Modelica.Blocks.Math.Gain gain4(k = c) annotation(
+      Placement(visible = true, transformation(origin = {38, 54}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Modelica.Blocks.Math.Gain gain5(k = Ra/L) annotation(
+      Placement(visible = true, transformation(origin = {-4, 26}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
+    Modelica.Blocks.Math.Add3 add31(k2 = -1, k3 = -1) annotation(
+      Placement(visible = true, transformation(origin = {74, 54}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Modelica.Blocks.Interfaces.RealOutput y annotation(
+      Placement(visible = true, transformation(origin = {110, 54}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {110, 2}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  equation
+    connect(u, gain.u) annotation(
+      Line(points = {{-100, 62}, {-64, 62}}, color = {0, 0, 127}));
+    connect(gain.y, add3.u1) annotation(
+      Line(points = {{-40, 62}, {-22, 62}}, color = {0, 0, 127}));
+    connect(w, gain1.u) annotation(
+      Line(points = {{-100, 4}, {-66, 4}}, color = {0, 0, 127}));
+    connect(gain1.y, add3.u2) annotation(
+      Line(points = {{-42, 4}, {-36, 4}, {-36, 54}, {-22, 54}}, color = {0, 0, 127}));
+    connect(wp, gain2.u) annotation(
+      Line(points = {{-100, -60}, {-62, -60}}, color = {0, 0, 127}));
+    connect(gain1.u, gain3.u) annotation(
+      Line(points = {{-66, 4}, {-72, 4}, {-72, -16}, {-34, -16}}, color = {0, 0, 127}));
+    connect(gain5.y, add3.u3) annotation(
+      Line(points = {{-14, 26}, {-30, 26}, {-30, 46}, {-22, 46}}, color = {0, 0, 127}));
+    connect(add3.y, gain5.u) annotation(
+      Line(points = {{2, 54}, {8, 54}, {8, 26}}, color = {0, 0, 127}));
+    connect(add3.y, gain4.u) annotation(
+      Line(points = {{2, 54}, {26, 54}}, color = {0, 0, 127}));
+    connect(gain4.y, add31.u1) annotation(
+      Line(points = {{50, 54}, {50, 62}, {62, 62}}, color = {0, 0, 127}));
+    connect(gain3.y, add31.u2) annotation(
+      Line(points = {{-10, -16}, {56, -16}, {56, 54}, {62, 54}}, color = {0, 0, 127}));
+    connect(gain2.y, add31.u3) annotation(
+      Line(points = {{-38, -60}, {62, -60}, {62, 46}}, color = {0, 0, 127}));
+    connect(add31.y, y) annotation(
+      Line(points = {{86, 54}, {110, 54}}, color = {0, 0, 127}));
+    annotation(
+      uses(Modelica(version = "4.0.0")));
+  end Motor;
+
+  model Scheibenlaeufer
+    Motor motor annotation(
+      Placement(visible = true, transformation(origin = {-28, 46}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Generator generator annotation(
+      Placement(visible = true, transformation(origin = {8, 46}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Modelica.Blocks.Continuous.PI pi(T = 0.1, k = 2) annotation(
+      Placement(visible = true, transformation(origin = {78, 44}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Modelica.Blocks.Nonlinear.Limiter limiter(uMax = 5, uMin = 0) annotation(
+      Placement(visible = true, transformation(origin = {14, -8}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
+    Modelica.Blocks.Math.Feedback feedback annotation(
+      Placement(visible = true, transformation(origin = {54, 52}, extent = {{10, 10}, {-10, -10}}, rotation = 90)));
+    Modelica.Blocks.Sources.Step step(height = 1.5, startTime = 0.4) annotation(
+      Placement(visible = true, transformation(origin = {8, 90}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  equation
+    connect(motor.y, generator.M) annotation(
+      Line(points = {{-16, 46}, {-4, 46}}, color = {0, 0, 127}));
+    connect(generator.w, motor.w) annotation(
+      Line(points = {{20, 46}, {38, 46}, {38, 22}, {-52, 22}, {-52, 46}, {-40, 46}}, color = {0, 0, 127}));
+    connect(motor.wp, generator.wp) annotation(
+      Line(points = {{-40, 40}, {-44, 40}, {-44, 28}, {28, 28}, {28, 38}, {20, 38}}, color = {0, 0, 127}));
+    connect(generator.y, feedback.u2) annotation(
+      Line(points = {{20, 54}, {46, 54}, {46, 52}}, color = {0, 0, 127}));
+    connect(feedback.y, pi.u) annotation(
+      Line(points = {{54, 44}, {66, 44}}, color = {0, 0, 127}));
+    connect(pi.y, limiter.u) annotation(
+      Line(points = {{90, 44}, {92, 44}, {92, -8}, {26, -8}}, color = {0, 0, 127}));
+    connect(step.y, feedback.u1) annotation(
+      Line(points = {{20, 90}, {54, 90}, {54, 60}}, color = {0, 0, 127}));
+    connect(limiter.y, motor.u) annotation(
+      Line(points = {{4, -8}, {-72, -8}, {-72, 52}, {-40, 52}}, color = {0, 0, 127}));
+    annotation(
+      uses(Modelica(version = "4.0.0")));
+  end Scheibenlaeufer;
+
+  block Last
+    parameter Real Ra = 8.25;
+    parameter Real L = 0.375e-3;
+    parameter Real RL = 100;
+    Modelica.Blocks.Interfaces.RealOutput Ur annotation(
+      Placement(visible = true, transformation(origin = {110, 72}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {110, 74}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Modelica.Blocks.Math.Gain gain5(k = RL) annotation(
+      Placement(visible = true, transformation(origin = {62, 72}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Modelica.Blocks.Continuous.Integrator integrator(k = 1) annotation(
+      Placement(visible = true, transformation(origin = {10, 72}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Modelica.Blocks.Math.Add add(k1 = 1, k2 = -1) annotation(
+      Placement(visible = true, transformation(origin = {-58, 72}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Modelica.Blocks.Interfaces.RealInput Ug annotation(
+      Placement(visible = true, transformation(origin = {-100, 78}, extent = {{-20, -20}, {20, 20}}, rotation = 0), iconTransformation(origin = {-120, 0}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
+    Modelica.Blocks.Math.Gain gain(k = (RL + Ra)) annotation(
+      Placement(visible = true, transformation(origin = {-12, 32}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
+    Modelica.Blocks.Math.Gain gain1(k = 1/L) annotation(
+      Placement(visible = true, transformation(origin = {-26, 72}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  equation
+    connect(gain5.y, Ur) annotation(
+      Line(points = {{73, 72}, {110, 72}}, color = {0, 0, 127}));
+    connect(Ug, add.u1) annotation(
+      Line(points = {{-100, 78}, {-70, 78}}, color = {0, 0, 127}));
+    connect(integrator.y, gain.u) annotation(
+      Line(points = {{21, 72}, {24, 72}, {24, 32}, {0, 32}}, color = {0, 0, 127}));
+    connect(gain.y, add.u2) annotation(
+      Line(points = {{-22, 32}, {-72, 32}, {-72, 66}, {-70, 66}}, color = {0, 0, 127}));
+    connect(integrator.y, gain5.u) annotation(
+      Line(points = {{21, 72}, {50, 72}}, color = {0, 0, 127}));
+    connect(add.y, gain1.u) annotation(
+      Line(points = {{-46, 72}, {-38, 72}}, color = {0, 0, 127}));
+    connect(gain1.y, integrator.u) annotation(
+      Line(points = {{-14, 72}, {-2, 72}}, color = {0, 0, 127}));
+    annotation(
+      uses(Modelica(version = "4.0.0")),
+      Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}})));
+  end Last;
+
   model abc_me_FMU "Block that.simulators a vector of real values with Simulator"
-    constant String fmuWorkingDir = "C:/Users/JP/AppData/Local/Temp/OpenModelica/OMEdit/temp20240206133157826";
+    constant String fmuWorkingDir = "C:/Users/JP/AppData/Local/Temp/OpenModelica/OMEdit/temp20240426091649760";
     parameter Integer logLevel = 3 "log level used during the loading of FMU" annotation(
       Dialog(tab = "FMI", group = "Enable logging"));
     parameter Boolean debugLogging = false "enables the FMU simulation logging" annotation(
@@ -354,220 +594,6 @@ package Auswertung
     annotation(
       experiment(StartTime = 0.0, StopTime = 1.0, Tolerance = 1e-06));
   end abc_me_FMU;
-
-  block Generator
-    parameter Real Ra = 8.25;
-    parameter Real c = 51.5e-3;
-    parameter Real L = 0.375e-3;
-    parameter Real cu = 0.3248e-3;
-    parameter Real J = 47.5e-6;
-    parameter Real RL = 100;
-    Modelica.Blocks.Math.Gain gain(k = 1/J) annotation(
-      Placement(visible = true, transformation(origin = {-38, 78}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Modelica.Blocks.Math.Add3 add3(k1 = 1, k2 = -1, k3 = -1) annotation(
-      Placement(visible = true, transformation(origin = {48, 4}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Modelica.Blocks.Continuous.Integrator integrator1(k = 1) annotation(
-      Placement(visible = true, transformation(origin = {116, 4}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Modelica.Blocks.Math.Gain gain4(k = cu/J) annotation(
-      Placement(visible = true, transformation(origin = {54, -36}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
-    Modelica.Blocks.Interfaces.RealOutput y annotation(
-      Placement(visible = true, transformation(origin = {154, 76}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {110, 74}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Modelica.Blocks.Math.Gain gain5(k = RL) annotation(
-      Placement(visible = true, transformation(origin = {64, 76}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Modelica.Blocks.Math.Gain gain1(k = c/J) annotation(
-      Placement(visible = true, transformation(origin = {0, 4}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Modelica.Blocks.Math.Gain gain3(k = c/L) annotation(
-      Placement(visible = true, transformation(origin = {-44, -76}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
-    Modelica.Blocks.Continuous.Integrator integrator(k = 1) annotation(
-      Placement(visible = true, transformation(origin = {-42, 4}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Modelica.Blocks.Math.Gain gain2(k = (RL + Ra)/L) annotation(
-      Placement(visible = true, transformation(origin = {-44, -42}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
-    Modelica.Blocks.Math.Add add(k1 = 1, k2 = -1) annotation(
-      Placement(visible = true, transformation(origin = {-76, 4}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Modelica.Blocks.Interfaces.RealOutput w annotation(
-      Placement(visible = true, transformation(origin = {152, 4}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {110, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Modelica.Blocks.Interfaces.RealOutput wp annotation(
-      Placement(visible = true, transformation(origin = {154, -70}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {110, -80}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Modelica.Blocks.Interfaces.RealInput M annotation(
-      Placement(visible = true, transformation(origin = {-100, 78}, extent = {{-20, -20}, {20, 20}}, rotation = 0), iconTransformation(origin = {-120, 0}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
-    Modelica.Blocks.Interfaces.RealOutput Ug annotation(
-      Placement(visible = true, transformation(origin = {154, -92}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {2, 110}, extent = {{-10, -10}, {10, 10}}, rotation = 90)));
-    Modelica.Blocks.Math.Gain gain6(k = L) annotation(
-      Placement(visible = true, transformation(origin = {4, -92}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  equation
-    connect(integrator1.u, add3.y) annotation(
-      Line(points = {{104, 4}, {60, 4}}, color = {0, 0, 127}));
-    connect(integrator1.y, gain4.u) annotation(
-      Line(points = {{128, 4}, {134, 4}, {134, -36}, {66, -36}}, color = {0, 0, 127}));
-    connect(gain5.y, y) annotation(
-      Line(points = {{76, 76}, {154, 76}}, color = {0, 0, 127}));
-    connect(add3.u3, gain4.y) annotation(
-      Line(points = {{36, -4}, {36, -36}, {43, -36}}, color = {0, 0, 127}));
-    connect(add3.u2, gain1.y) annotation(
-      Line(points = {{36, 4}, {11, 4}}, color = {0, 0, 127}));
-    connect(gain3.u, integrator1.y) annotation(
-      Line(points = {{-32, -76}, {134, -76}, {134, 4}, {128, 4}}, color = {0, 0, 127}));
-    connect(integrator.y, gain1.u) annotation(
-      Line(points = {{-31, 4}, {-12, 4}}, color = {0, 0, 127}));
-    connect(add.y, integrator.u) annotation(
-      Line(points = {{-64, 4}, {-54, 4}}, color = {0, 0, 127}));
-    connect(gain2.y, add.u2) annotation(
-      Line(points = {{-55, -42}, {-116, -42}, {-116, -2}, {-88, -2}}, color = {0, 0, 127}));
-    connect(gain3.y, add.u1) annotation(
-      Line(points = {{-55, -76}, {-134, -76}, {-134, 10}, {-88, 10}}, color = {0, 0, 127}));
-    connect(integrator1.y, w) annotation(
-      Line(points = {{128, 4}, {152, 4}}, color = {0, 0, 127}));
-    connect(add3.y, wp) annotation(
-      Line(points = {{59, 4}, {86, 4}, {86, -70}, {154, -70}}, color = {0, 0, 127}));
-    connect(add3.u1, gain.y) annotation(
-      Line(points = {{36, 12}, {36, 45}, {18, 45}, {18, 78}, {-27, 78}}, color = {0, 0, 127}));
-    connect(integrator.y, gain2.u) annotation(
-      Line(points = {{-30, 4}, {-22, 4}, {-22, -42}, {-32, -42}}, color = {0, 0, 127}));
-    connect(M, gain.u) annotation(
-      Line(points = {{-100, 78}, {-50, 78}}, color = {0, 0, 127}));
-    connect(integrator.y, gain5.u) annotation(
-      Line(points = {{-30, 4}, {-22, 4}, {-22, 86}, {40, 86}, {40, 76}, {52, 76}}, color = {0, 0, 127}));
-  connect(gain3.y, gain6.u) annotation(
-      Line(points = {{-54, -76}, {-66, -76}, {-66, -92}, {-8, -92}}, color = {0, 0, 127}));
-  connect(gain6.y, Ug) annotation(
-      Line(points = {{16, -92}, {154, -92}}, color = {0, 0, 127}));
-    annotation(
-      uses(Modelica(version = "4.0.0")),
-      Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}})));
-  end Generator;
-
-  block Motor
-    parameter Real Ra = 8.25;
-    parameter Real c = 51.5e-3;
-    parameter Real L = 0.375e-3;
-    parameter Real cu = 0.3248e-3;
-    parameter Real J = 47.5e-6;
-    Modelica.Blocks.Interfaces.RealInput u annotation(
-      Placement(visible = true, transformation(origin = {-100, 62}, extent = {{-20, -20}, {20, 20}}, rotation = 0), iconTransformation(origin = {-120, 62}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
-    Modelica.Blocks.Interfaces.RealInput w annotation(
-      Placement(visible = true, transformation(origin = {-100, 4}, extent = {{-20, -20}, {20, 20}}, rotation = 0), iconTransformation(origin = {-118, 0}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
-    Modelica.Blocks.Interfaces.RealInput wp annotation(
-      Placement(visible = true, transformation(origin = {-100, -60}, extent = {{-20, -20}, {20, 20}}, rotation = 0), iconTransformation(origin = {-120, -58}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
-    Modelica.Blocks.Math.Gain gain(k = 1/L) annotation(
-      Placement(visible = true, transformation(origin = {-52, 62}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Modelica.Blocks.Math.Gain gain1(k = c/L) annotation(
-      Placement(visible = true, transformation(origin = {-54, 4}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Modelica.Blocks.Math.Gain gain2(k = J) annotation(
-      Placement(visible = true, transformation(origin = {-50, -60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Modelica.Blocks.Math.Add3 add3(k2 = -1, k3 = -1) annotation(
-      Placement(visible = true, transformation(origin = {-10, 54}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Modelica.Blocks.Math.Gain gain3(k = cu) annotation(
-      Placement(visible = true, transformation(origin = {-22, -16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Modelica.Blocks.Math.Gain gain4(k = c) annotation(
-      Placement(visible = true, transformation(origin = {38, 54}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Modelica.Blocks.Math.Gain gain5(k = Ra/L) annotation(
-      Placement(visible = true, transformation(origin = {-4, 26}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
-    Modelica.Blocks.Math.Add3 add31(k2 = -1, k3 = -1) annotation(
-      Placement(visible = true, transformation(origin = {74, 54}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Modelica.Blocks.Interfaces.RealOutput y annotation(
-      Placement(visible = true, transformation(origin = {110, 54}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {110, 2}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  equation
-    connect(u, gain.u) annotation(
-      Line(points = {{-100, 62}, {-64, 62}}, color = {0, 0, 127}));
-    connect(gain.y, add3.u1) annotation(
-      Line(points = {{-40, 62}, {-22, 62}}, color = {0, 0, 127}));
-    connect(w, gain1.u) annotation(
-      Line(points = {{-100, 4}, {-66, 4}}, color = {0, 0, 127}));
-    connect(gain1.y, add3.u2) annotation(
-      Line(points = {{-42, 4}, {-36, 4}, {-36, 54}, {-22, 54}}, color = {0, 0, 127}));
-    connect(wp, gain2.u) annotation(
-      Line(points = {{-100, -60}, {-62, -60}}, color = {0, 0, 127}));
-    connect(gain1.u, gain3.u) annotation(
-      Line(points = {{-66, 4}, {-72, 4}, {-72, -16}, {-34, -16}}, color = {0, 0, 127}));
-    connect(gain5.y, add3.u3) annotation(
-      Line(points = {{-14, 26}, {-30, 26}, {-30, 46}, {-22, 46}}, color = {0, 0, 127}));
-    connect(add3.y, gain5.u) annotation(
-      Line(points = {{2, 54}, {8, 54}, {8, 26}}, color = {0, 0, 127}));
-    connect(add3.y, gain4.u) annotation(
-      Line(points = {{2, 54}, {26, 54}}, color = {0, 0, 127}));
-    connect(gain4.y, add31.u1) annotation(
-      Line(points = {{50, 54}, {50, 62}, {62, 62}}, color = {0, 0, 127}));
-    connect(gain3.y, add31.u2) annotation(
-      Line(points = {{-10, -16}, {56, -16}, {56, 54}, {62, 54}}, color = {0, 0, 127}));
-    connect(gain2.y, add31.u3) annotation(
-      Line(points = {{-38, -60}, {62, -60}, {62, 46}}, color = {0, 0, 127}));
-    connect(add31.y, y) annotation(
-      Line(points = {{86, 54}, {110, 54}}, color = {0, 0, 127}));
-    annotation(
-      uses(Modelica(version = "4.0.0")));
-  end Motor;
-
-  model Scheibenlaeufer
-    Motor motor annotation(
-      Placement(visible = true, transformation(origin = {-28, 46}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Generator generator annotation(
-      Placement(visible = true, transformation(origin = {8, 46}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Modelica.Blocks.Continuous.PI pi(T = 0.1, k = 2) annotation(
-      Placement(visible = true, transformation(origin = {78, 44}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Modelica.Blocks.Nonlinear.Limiter limiter(uMax = 5, uMin = 0) annotation(
-      Placement(visible = true, transformation(origin = {14, -8}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
-    Modelica.Blocks.Math.Feedback feedback annotation(
-      Placement(visible = true, transformation(origin = {54, 52}, extent = {{10, 10}, {-10, -10}}, rotation = 90)));
-    Modelica.Blocks.Sources.Step step(height = 1.5, startTime = 0.4) annotation(
-      Placement(visible = true, transformation(origin = {8, 90}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  equation
-    connect(motor.y, generator.M) annotation(
-      Line(points = {{-16, 46}, {-4, 46}}, color = {0, 0, 127}));
-    connect(generator.w, motor.w) annotation(
-      Line(points = {{20, 46}, {38, 46}, {38, 22}, {-52, 22}, {-52, 46}, {-40, 46}}, color = {0, 0, 127}));
-    connect(motor.wp, generator.wp) annotation(
-      Line(points = {{-40, 40}, {-44, 40}, {-44, 28}, {28, 28}, {28, 38}, {20, 38}}, color = {0, 0, 127}));
-    connect(generator.y, feedback.u2) annotation(
-      Line(points = {{20, 54}, {46, 54}, {46, 52}}, color = {0, 0, 127}));
-    connect(feedback.y, pi.u) annotation(
-      Line(points = {{54, 44}, {66, 44}}, color = {0, 0, 127}));
-    connect(pi.y, limiter.u) annotation(
-      Line(points = {{90, 44}, {92, 44}, {92, -8}, {26, -8}}, color = {0, 0, 127}));
-    connect(step.y, feedback.u1) annotation(
-      Line(points = {{20, 90}, {54, 90}, {54, 60}}, color = {0, 0, 127}));
-    connect(limiter.y, motor.u) annotation(
-      Line(points = {{4, -8}, {-72, -8}, {-72, 52}, {-40, 52}}, color = {0, 0, 127}));
-    annotation(
-      uses(Modelica(version = "4.0.0")));
-  end Scheibenlaeufer;
-
-  block Last
-    parameter Real Ra = 8.25;
-    parameter Real L = 0.375e-3;
-    parameter Real RL = 100;
-    Modelica.Blocks.Interfaces.RealOutput Ur annotation(
-      Placement(visible = true, transformation(origin = {110, 72}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {110, 74}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Modelica.Blocks.Math.Gain gain5(k = RL) annotation(
-      Placement(visible = true, transformation(origin = {62, 72}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Modelica.Blocks.Continuous.Integrator integrator(k = 1) annotation(
-      Placement(visible = true, transformation(origin = {10, 72}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Modelica.Blocks.Math.Add add(k1 = 1, k2 = -1) annotation(
-      Placement(visible = true, transformation(origin = {-58, 72}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Modelica.Blocks.Interfaces.RealInput Ug annotation(
-      Placement(visible = true, transformation(origin = {-100, 78}, extent = {{-20, -20}, {20, 20}}, rotation = 0), iconTransformation(origin = {-120, 0}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
-    Modelica.Blocks.Math.Gain gain(k = (RL + Ra)) annotation(
-      Placement(visible = true, transformation(origin = {-12, 32}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
-    Modelica.Blocks.Math.Gain gain1(k = 1/L) annotation(
-      Placement(visible = true, transformation(origin = {-26, 72}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  equation
-    connect(gain5.y, Ur) annotation(
-      Line(points = {{73, 72}, {110, 72}}, color = {0, 0, 127}));
-    connect(Ug, add.u1) annotation(
-      Line(points = {{-100, 78}, {-70, 78}}, color = {0, 0, 127}));
-    connect(integrator.y, gain.u) annotation(
-      Line(points = {{21, 72}, {24, 72}, {24, 32}, {0, 32}}, color = {0, 0, 127}));
-    connect(gain.y, add.u2) annotation(
-      Line(points = {{-22, 32}, {-72, 32}, {-72, 66}, {-70, 66}}, color = {0, 0, 127}));
-    connect(integrator.y, gain5.u) annotation(
-      Line(points = {{21, 72}, {50, 72}}, color = {0, 0, 127}));
-    connect(add.y, gain1.u) annotation(
-      Line(points = {{-46, 72}, {-38, 72}}, color = {0, 0, 127}));
-    connect(gain1.y, integrator.u) annotation(
-      Line(points = {{-14, 72}, {-2, 72}}, color = {0, 0, 127}));
-    annotation(
-      uses(Modelica(version = "4.0.0")),
-      Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}})));
-  end Last;
-annotation(
+  annotation(
     uses(Modelica(version = "4.0.0")));
 end Auswertung;

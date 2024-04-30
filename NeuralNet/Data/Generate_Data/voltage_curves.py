@@ -25,7 +25,6 @@ plt.plot(signal)
 plt.show()
 df = pd.DataFrame(data)
 df.to_csv(os.path.join(os.path.dirname(__file__),f"sin_{iteration}_sampled.csv"), index = False)
-sys.exit()
  
 data = {'time': np.around(time_frame, decimals=5, out=None),
         "voltage": np.abs(np.around(Amplitude * sawtooth(2 * np.pi * frequency * time_frame), decimals=5, out=None))}

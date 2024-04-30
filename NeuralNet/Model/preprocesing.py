@@ -82,7 +82,7 @@ def load_data(show_data = False, minmim_delta = 0.0, window_length = 0.5) -> "Ge
             plt.title("Filtered Signal")
             plt.legend()
             plt.show()
-            
+
         yield df.loc[df["is_oscilating"] == 1]
 
 def get_data(model : "object", Length_of_sample_s, sr:"int" = 0.0001, show_data = False, use_filter = True, minimum_delta = 0.0) -> "TensorDataset":
@@ -90,7 +90,7 @@ def get_data(model : "object", Length_of_sample_s, sr:"int" = 0.0001, show_data 
         returns a TensorDataset already split. 
     """
     # this operator describes the sampling period eg 1 / fsr
-    sample_length = Length_of_sample_s / sr ## 1 sample will be 1 second of measurement
+    sample_length = Length_of_sample_s / sr
     total_num_samples = 0
     X = torch.zeros((15100, 10000))#int(sample_length)))
     Y = torch.zeros((15100, 1))#int(sample_length))) # Dont use more than 500 samples
@@ -114,6 +114,11 @@ def get_data(model : "object", Length_of_sample_s, sr:"int" = 0.0001, show_data 
 
 if __name__ == "__main__":
     for df in load_data():
-        plt.plot(df["Zeit[s]"],df["Generatorspannung[V]"])
+        plt.plot(df["Zeit[s]"],df["Generatorspannung[V]"] ,label = "Ausgangsspannung")
+        plt.plot(df["Zeit[s]"],df["Ue"],label = "Eingangsspannung")
+        plt.title("Trainingsdaten")
+        plt.xlabel('Zeit / s')
+        plt.ylabel('Spannung / V')
+        plt.legend()
         plt.show()
 
