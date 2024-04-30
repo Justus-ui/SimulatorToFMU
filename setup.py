@@ -2,7 +2,7 @@ import os
 import json
 import sys
 import warnings
-
+import subprocess
 
 def setup():
     dictionary = {}
@@ -20,10 +20,12 @@ def setup():
     req_path = os.path.join(dirname, "requirements.txt")
     if "3.7" not in sys.version:
         warnings.warn("The Applicatation is only verified to work for Python 3.7.X")
-    pip = os.system(f""" python -m pip install -r "{req_path}" """)
+    pip = subprocess.run([sys.executable, '-m', 'pip', 'install', '-r' ,f'{req_path}'])
     print(pip)
+    pip3 = 0
     if pip:
-        pip3 = os.system(f""" python -m pip install -r "{req_path}" """)
+        subprocess.run([sys.executable, '-m', 'pip', 'install', '-r' ,f'{req_path}'])
+        #pip3 = os.system(f""" python -m pip install -r "{req_path}" """)
     if pip and pip3:
         raise SystemError("Did not find pip")
     model_path = os.path.join(dirname, r"NeuralNet\Model")
