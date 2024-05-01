@@ -8,8 +8,6 @@ package Auswertung
       Placement(visible = true, transformation(origin = {-10, -44}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
   Modelica.Blocks.Sources.Step step(height = 1.5, startTime = 0.2) annotation(
       Placement(visible = true, transformation(origin = {-30, 86}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  abc_me_FMU abc_me_FMU1(logLevel = 3) annotation(
-      Placement(visible = true, transformation(origin = {-58, 38}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Blocks.Logical.LessEqualThreshold lessEqualThreshold(threshold = 0.4) annotation(
       Placement(visible = true, transformation(origin = {38, -54}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
   Modelica.Blocks.Sources.Step step2(height = 5, startTime = 0) annotation(
@@ -22,6 +20,8 @@ package Auswertung
       Placement(visible = true, transformation(origin = {14, 52}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Blocks.Continuous.PI pi(k = 15)  annotation(
       Placement(visible = true, transformation(origin = {60, 52}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  abc_me_FMU abc_me_FMU1 annotation(
+      Placement(visible = true, transformation(origin = {-58, 46}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   equation
     connect(add.u1, step.y) annotation(
       Line(points = {{2, 58}, {-14, 58}, {-14, 86}, {-18, 86}}, color = {0, 0, 127}));
@@ -33,24 +33,24 @@ package Auswertung
       Line(points = {{33, -20}, {7, -20}, {7, -36}, {1, -36}}, color = {0, 0, 127}));
     connect(lessEqualThreshold.y, or1.u2) annotation(
       Line(points = {{27, -54}, {21, -54}, {21, -60}, {-41, -60}, {-41, -36}}, color = {255, 0, 255}));
-    connect(abc_me_FMU1.y, add.u2) annotation(
-      Line(points = {{-47, 45}, {2, 45}, {2, 46}}, color = {0, 0, 127}));
     connect(or1.y, limiter.u2) annotation(
       Line(points = {{-63, -28}, {-73, -28}, {-73, 16}, {7, 16}, {7, -2}, {-13, -2}}, color = {255, 0, 255}));
     connect(greaterThreshold.y, or1.u1) annotation(
       Line(points = {{25, 14}, {15, 14}, {15, -28}, {-41, -28}}, color = {255, 0, 255}));
     connect(switch11.y, limiter.u1) annotation(
       Line(points = {{-21, -44}, {-27, -44}, {-27, -16}, {-1, -16}, {-1, 6}, {-13, 6}}, color = {0, 0, 127}));
-    connect(limiter.y, abc_me_FMU1.x) annotation(
-      Line(points = {{-34, -2}, {-88, -2}, {-88, 46}, {-68, 46}}, color = {0, 0, 127}));
-  connect(add.y, pi.u) annotation(
+    connect(add.y, pi.u) annotation(
       Line(points = {{26, 52}, {48, 52}}, color = {0, 0, 127}));
-  connect(pi.y, lessEqualThreshold.u) annotation(
+    connect(pi.y, lessEqualThreshold.u) annotation(
       Line(points = {{71, 52}, {78, 52}, {78, -54}, {50, -54}}, color = {0, 0, 127}));
-  connect(pi.y, greaterThreshold.u) annotation(
+    connect(pi.y, greaterThreshold.u) annotation(
       Line(points = {{71, 52}, {57.5, 52}, {57.5, 14}, {48, 14}}, color = {0, 0, 127}));
-  connect(limiter.u3, pi.y) annotation(
+    connect(limiter.u3, pi.y) annotation(
       Line(points = {{-12, -10}, {84, -10}, {84, 52}, {72, 52}}, color = {0, 0, 127}));
+  connect(abc_me_FMU1.y, add.u2) annotation(
+      Line(points = {{-46, 54}, {-12, 54}, {-12, 46}, {2, 46}}, color = {0, 0, 127}));
+  connect(limiter.y, abc_me_FMU1.x) annotation(
+      Line(points = {{-34, -2}, {-86, -2}, {-86, 54}, {-68, 54}}, color = {0, 0, 127}));
     annotation(
       uses(Modelica(version = "4.0.0")),
       Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}})));

@@ -1,0 +1,15 @@
+// Export model as an FMU.
+loadModel(Modelica);
+getErrorString();
+loadModel(ModelicaReference);
+getErrorString();
+loadFile("simulator.mo");
+getErrorString();
+OpenModelica.Scripting.translateModelFMU(
+  className=simulator,
+  version="2.0",
+  fmuType="me");
+getErrorString();
+
+
+
