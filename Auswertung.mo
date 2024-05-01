@@ -6,13 +6,13 @@ package Auswertung
       Placement(visible = true, transformation(origin = {-52, -28}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
   Modelica.Blocks.Logical.Switch switch11 annotation(
       Placement(visible = true, transformation(origin = {-10, -44}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
-  Modelica.Blocks.Sources.Step step(height = 1.5, startTime = 0.2) annotation(
+  Modelica.Blocks.Sources.Step step(height = 1, startTime = 0.2) annotation(
       Placement(visible = true, transformation(origin = {-30, 86}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Modelica.Blocks.Logical.LessEqualThreshold lessEqualThreshold(threshold = 0.4) annotation(
+  Modelica.Blocks.Logical.LessEqualThreshold lessEqualThreshold(threshold = 0.1) annotation(
       Placement(visible = true, transformation(origin = {38, -54}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
   Modelica.Blocks.Sources.Step step2(height = 5, startTime = 0) annotation(
       Placement(visible = true, transformation(origin = {42, -86}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
-  Modelica.Blocks.Logical.GreaterThreshold greaterThreshold(threshold = 4.5) annotation(
+  Modelica.Blocks.Logical.GreaterThreshold greaterThreshold(threshold = 4.9) annotation(
       Placement(visible = true, transformation(origin = {36, 14}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
   Modelica.Blocks.Logical.Switch limiter annotation(
       Placement(visible = true, transformation(origin = {-24, -2}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
@@ -20,8 +20,8 @@ package Auswertung
       Placement(visible = true, transformation(origin = {14, 52}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Blocks.Continuous.PI pi(k = 15)  annotation(
       Placement(visible = true, transformation(origin = {60, 52}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  abc_me_FMU abc_me_FMU1 annotation(
-      Placement(visible = true, transformation(origin = {-58, 46}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Scheibenlaeufer_me_FMU scheibenlaeufer_me_FMU annotation(
+      Placement(transformation(origin = {-58, 38}, extent = {{-10, -10}, {10, 10}})));
   equation
     connect(add.u1, step.y) annotation(
       Line(points = {{2, 58}, {-14, 58}, {-14, 86}, {-18, 86}}, color = {0, 0, 127}));
@@ -47,10 +47,10 @@ package Auswertung
       Line(points = {{71, 52}, {57.5, 52}, {57.5, 14}, {48, 14}}, color = {0, 0, 127}));
     connect(limiter.u3, pi.y) annotation(
       Line(points = {{-12, -10}, {84, -10}, {84, 52}, {72, 52}}, color = {0, 0, 127}));
-  connect(abc_me_FMU1.y, add.u2) annotation(
-      Line(points = {{-46, 54}, {-12, 54}, {-12, 46}, {2, 46}}, color = {0, 0, 127}));
-  connect(limiter.y, abc_me_FMU1.x) annotation(
-      Line(points = {{-34, -2}, {-86, -2}, {-86, 54}, {-68, 54}}, color = {0, 0, 127}));
+  connect(scheibenlaeufer_me_FMU.y, add.u2) annotation(
+      Line(points = {{-47, 45}, {2, 45}, {2, 46}}, color = {0, 0, 127}));
+  connect(limiter.y, scheibenlaeufer_me_FMU.x) annotation(
+      Line(points = {{-34, -2}, {-82, -2}, {-82, 46}, {-68, 46}}, color = {0, 0, 127}));
     annotation(
       uses(Modelica(version = "4.0.0")),
       Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}})));
@@ -269,23 +269,23 @@ package Auswertung
       uses(Modelica(version = "4.0.0")),
       Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}})));
   end Last;
-
-  model abc_me_FMU "Block that.simulators a vector of real values with Simulator"
-    constant String fmuWorkingDir = "C:/Users/JP/AppData/Local/Temp/OpenModelica/OMEdit/temp20240426091649760";
+  
+  model Scheibenlaeufer_me_FMU "Block that.simulators a vector of real values with Simulator"
+    constant String fmuWorkingDir = "C:/Users/Justu/AppData/Local/Temp/OpenModelica/OMEdit/temp20240501100240983";
     parameter Integer logLevel = 3 "log level used during the loading of FMU" annotation(
       Dialog(tab = "FMI", group = "Enable logging"));
     parameter Boolean debugLogging = false "enables the FMU simulation logging" annotation(
       Dialog(tab = "FMI", group = "Enable logging"));
     Real _D_TMP_1_1_;
     Real _D_TMP_3_1_;
-    Modelica.Blocks.Interfaces.RealInput x "Voltage" annotation(
+    Modelica.Blocks.Interfaces.RealInput x "Eingangsspannung" annotation(
       Placement(transformation(extent = {{-120, 60}, {-100, 80}})));
-    Modelica.Blocks.Interfaces.RealOutput y "Current" annotation(
+    Modelica.Blocks.Interfaces.RealOutput y "Generatorspannung" annotation(
       Placement(transformation(extent = {{100, 60}, {120, 80}})));
     parameter Boolean _saveToFile = false "Flag for writing results";
     parameter String _configurationFileName = "C:/Users/Public/server_config.txt" "parameter";
   protected
-    FMI2ModelExchange fmi2me = FMI2ModelExchange(logLevel, fmuWorkingDir, "abc", debugLogging);
+    FMI2ModelExchange fmi2me = FMI2ModelExchange(logLevel, fmuWorkingDir, "Scheibenlaeufer", debugLogging);
     constant Integer numberOfContinuousStates = 0;
     Real fmi_x[numberOfContinuousStates] "States";
     Real fmi_x_new[numberOfContinuousStates](each fixed = true) "New States";
@@ -301,264 +301,13 @@ package Auswertung
     Real flowStatesInputs;
     Real realInputVariables[1];
     Real fmi_input_x;
+    Real realEventInputVariables[1](each fixed = true);
     Boolean callEventUpdate;
     Boolean newStatesAvailable(fixed = true);
     Real triggerDSSEvent;
     Real nextEventTime(fixed = true);
-
-    class FMI2ModelExchange
-      extends ExternalObject;
-
-      function constructor
-        input Integer logLevel;
-        input String workingDirectory;
-        input String instanceName;
-        input Boolean debugLogging;
-        output FMI2ModelExchange fmi2me;
-      
-        external "C" fmi2me = FMI2ModelExchangeConstructor_OMC(logLevel, workingDirectory, instanceName, debugLogging) annotation(
-          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
-      end constructor;
-
-      function destructor
-        input FMI2ModelExchange fmi2me;
-      
-        external "C" FMI2ModelExchangeDestructor_OMC(fmi2me) annotation(
-          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
-      end destructor;
-    end FMI2ModelExchange;
-
-    package fmi2Functions
-      function fmi2SetupExperiment
-        input FMI2ModelExchange fmi2me;
-        input Boolean inToleranceDefined;
-        input Real inTolerance;
-        input Real inStartTime;
-        input Boolean inStopTimeDefined;
-        input Real inStopTime;
-        input Real inFlow;
-        output Real outFlow = inFlow;
-      
-        external "C" fmi2SetupExperiment_OMC(fmi2me, inToleranceDefined, inTolerance, inStartTime, inStopTimeDefined, inStopTime) annotation(
-          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
-      end fmi2SetupExperiment;
-
-      function fmi2SetTime
-        input FMI2ModelExchange fmi2me;
-        input Real inTime;
-        input Real inFlow;
-        output Real outFlow = inFlow;
-      
-        external "C" fmi2SetTime_OMC(fmi2me, inTime) annotation(
-          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
-      end fmi2SetTime;
-
-      function fmi2EnterInitialization
-        input FMI2ModelExchange fmi2me;
-        input Real inFlowVariable;
-        output Real outFlowVariable = inFlowVariable;
-      
-        external "C" fmi2EnterInitializationModel_OMC(fmi2me) annotation(
-          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
-      end fmi2EnterInitialization;
-
-      function fmi2ExitInitialization
-        input FMI2ModelExchange fmi2me;
-        input Real inFlowVariable;
-        output Real outFlowVariable = inFlowVariable;
-      
-        external "C" fmi2ExitInitializationModel_OMC(fmi2me) annotation(
-          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
-      end fmi2ExitInitialization;
-
-      function fmi2GetContinuousStates
-        input FMI2ModelExchange fmi2me;
-        input Integer numberOfContinuousStates;
-        input Real inFlowParams;
-        output Real fmi_x[numberOfContinuousStates];
-      
-        external "C" fmi2GetContinuousStates_OMC(fmi2me, numberOfContinuousStates, inFlowParams, fmi_x) annotation(
-          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
-      end fmi2GetContinuousStates;
-
-      function fmi2SetContinuousStates
-        input FMI2ModelExchange fmi2me;
-        input Real fmi_x[:];
-        input Real inFlowParams;
-        output Real outFlowStates;
-      
-        external "C" outFlowStates = fmi2SetContinuousStates_OMC(fmi2me, size(fmi_x, 1), inFlowParams, fmi_x) annotation(
-          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
-      end fmi2SetContinuousStates;
-
-      function fmi2GetDerivatives
-        input FMI2ModelExchange fmi2me;
-        input Integer numberOfContinuousStates;
-        input Real inFlowStates;
-        output Real fmi_x[numberOfContinuousStates];
-      
-        external "C" fmi2GetDerivatives_OMC(fmi2me, numberOfContinuousStates, inFlowStates, fmi_x) annotation(
-          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
-      end fmi2GetDerivatives;
-
-      function fmi2GetEventIndicators
-        input FMI2ModelExchange fmi2me;
-        input Integer numberOfEventIndicators;
-        input Real inFlowStates;
-        output Real fmi_z[numberOfEventIndicators];
-      
-        external "C" fmi2GetEventIndicators_OMC(fmi2me, numberOfEventIndicators, inFlowStates, fmi_z) annotation(
-          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
-      end fmi2GetEventIndicators;
-
-      function fmi2GetReal
-        input FMI2ModelExchange fmi2me;
-        input Real realValuesReferences[:];
-        input Real inFlowStatesInput;
-        output Real realValues[size(realValuesReferences, 1)];
-      
-        external "C" fmi2GetReal_OMC(fmi2me, size(realValuesReferences, 1), realValuesReferences, inFlowStatesInput, realValues, 1) annotation(
-          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
-      end fmi2GetReal;
-
-      function fmi2SetReal
-        input FMI2ModelExchange fmi2me;
-        input Real realValueReferences[:];
-        input Real realValues[size(realValueReferences, 1)];
-        output Real outValues[size(realValueReferences, 1)] = realValues;
-      
-        external "C" fmi2SetReal_OMC(fmi2me, size(realValueReferences, 1), realValueReferences, realValues, 1) annotation(
-          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
-      end fmi2SetReal;
-
-      function fmi2SetRealParameter
-        input FMI2ModelExchange fmi2me;
-        input Real realValueReferences[:];
-        input Real realValues[size(realValueReferences, 1)];
-        output Real out_Value = 1;
-      
-        external "C" fmi2SetReal_OMC(fmi2me, size(realValueReferences, 1), realValueReferences, realValues, 1) annotation(
-          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
-      end fmi2SetRealParameter;
-
-      function fmi2GetInteger
-        input FMI2ModelExchange fmi2me;
-        input Real integerValueReferences[:];
-        input Real inFlowStatesInput;
-        output Integer integerValues[size(integerValueReferences, 1)];
-      
-        external "C" fmi2GetInteger_OMC(fmi2me, size(integerValueReferences, 1), integerValueReferences, inFlowStatesInput, integerValues, 1) annotation(
-          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
-      end fmi2GetInteger;
-
-      function fmi2SetInteger
-        input FMI2ModelExchange fmi2me;
-        input Real integerValuesReferences[:];
-        input Integer integerValues[size(integerValuesReferences, 1)];
-        output Integer outValues[size(integerValuesReferences, 1)] = integerValues;
-      
-        external "C" fmi2SetInteger_OMC(fmi2me, size(integerValuesReferences, 1), integerValuesReferences, integerValues, 1) annotation(
-          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
-      end fmi2SetInteger;
-
-      function fmi2SetIntegerParameter
-        input FMI2ModelExchange fmi2me;
-        input Real integerValuesReferences[:];
-        input Integer integerValues[size(integerValuesReferences, 1)];
-        output Real out_Value = 1;
-      
-        external "C" fmi2SetInteger_OMC(fmi2me, size(integerValuesReferences, 1), integerValuesReferences, integerValues, 1) annotation(
-          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
-      end fmi2SetIntegerParameter;
-
-      function fmi2GetBoolean
-        input FMI2ModelExchange fmi2me;
-        input Real booleanValuesReferences[:];
-        input Real inFlowStatesInput;
-        output Boolean booleanValues[size(booleanValuesReferences, 1)];
-      
-        external "C" fmi2GetBoolean_OMC(fmi2me, size(booleanValuesReferences, 1), booleanValuesReferences, inFlowStatesInput, booleanValues, 1) annotation(
-          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
-      end fmi2GetBoolean;
-
-      function fmi2SetBoolean
-        input FMI2ModelExchange fmi2me;
-        input Real booleanValueReferences[:];
-        input Boolean booleanValues[size(booleanValueReferences, 1)];
-        output Boolean outValues[size(booleanValueReferences, 1)] = booleanValues;
-      
-        external "C" fmi2SetBoolean_OMC(fmi2me, size(booleanValueReferences, 1), booleanValueReferences, booleanValues, 1) annotation(
-          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
-      end fmi2SetBoolean;
-
-      function fmi2SetBooleanParameter
-        input FMI2ModelExchange fmi2me;
-        input Real booleanValueReferences[:];
-        input Boolean booleanValues[size(booleanValueReferences, 1)];
-        output Real out_Value = 1;
-      
-        external "C" fmi2SetBoolean_OMC(fmi2me, size(booleanValueReferences, 1), booleanValueReferences, booleanValues, 1) annotation(
-          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
-      end fmi2SetBooleanParameter;
-
-      function fmi2GetString
-        input FMI2ModelExchange fmi2me;
-        input Real stringValuesReferences[:];
-        input Real inFlowStatesInput;
-        output String stringValues[size(stringValuesReferences, 1)];
-      
-        external "C" fmi2GetString_OMC(fmi2me, size(stringValuesReferences, 1), stringValuesReferences, inFlowStatesInput, stringValues, 1) annotation(
-          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
-      end fmi2GetString;
-
-      function fmi2SetString
-        input FMI2ModelExchange fmi2me;
-        input Real stringValueReferences[:];
-        input String stringValues[size(stringValueReferences, 1)];
-        output String outValues[size(stringValueReferences, 1)] = stringValues;
-      
-        external "C" fmi2SetString_OMC(fmi2me, size(stringValueReferences, 1), stringValueReferences, stringValues, 1) annotation(
-          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
-      end fmi2SetString;
-
-      function fmi2SetStringParameter
-        input FMI2ModelExchange fmi2me;
-        input Real stringValueReferences[:];
-        input String stringValues[size(stringValueReferences, 1)];
-        output Real out_Value = 1;
-      
-        external "C" fmi2SetString_OMC(fmi2me, size(stringValueReferences, 1), stringValueReferences, stringValues, 1) annotation(
-          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
-      end fmi2SetStringParameter;
-
-      function fmi2EventUpdate
-        input FMI2ModelExchange fmi2me;
-        output Boolean outNewStatesAvailable;
-      
-        external "C" outNewStatesAvailable = fmi2EventUpdate_OMC(fmi2me) annotation(
-          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
-      end fmi2EventUpdate;
-
-      function fmi2nextEventTime
-        input FMI2ModelExchange fmi2me;
-        input Real inFlowStates;
-        output Real outNewnextTime;
-      
-        external "C" outNewnextTime = fmi2nextEventTime_OMC(fmi2me, inFlowStates) annotation(
-          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
-      end fmi2nextEventTime;
-
-      function fmi2CompletedIntegratorStep
-        input FMI2ModelExchange fmi2me;
-        input Real inFlowStates;
-        output Boolean outCallEventUpdate;
-      
-        external "C" outCallEventUpdate = fmi2CompletedIntegratorStep_OMC(fmi2me, inFlowStates) annotation(
-          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
-      end fmi2CompletedIntegratorStep;
-    end fmi2Functions;
   initial equation
-
+  
   initial algorithm
     flowParamsStart := 1;
     flowInitInputs := 1;
@@ -568,10 +317,10 @@ package Auswertung
     flowParamsStart := fmi2Functions.fmi2SetBooleanParameter(fmi2me, {0.0}, {_saveToFile});
     flowParamsStart := fmi2Functions.fmi2SetStringParameter(fmi2me, {0.0}, {_configurationFileName});
   initial equation
-
+  
   algorithm
     flowTime := if not initial() then fmi2Functions.fmi2SetTime(fmi2me, time, flowInitialized) else time;
-/* algorithm section ensures that inputs to fmi (if any) are set directly after the new time is set */
+  /* algorithm section ensures that inputs to fmi (if any) are set directly after the new time is set */
     realInputVariables := fmi2Functions.fmi2SetReal(fmi2me, {2.0}, {x});
   equation
     {fmi_input_x} = realInputVariables;
@@ -586,14 +335,275 @@ package Auswertung
     callEventUpdate = fmi2Functions.fmi2CompletedIntegratorStep(fmi2me, flowStatesInputs + flowTime);
   algorithm
     when {triggerDSSEvent > flowStatesInputs, pre(nextEventTime) < time, terminal()} then
-      newStatesAvailable := fmi2Functions.fmi2EventUpdate(fmi2me);
+      fmi2Functions.fmi2StartEventUpdate(fmi2me);
+      realEventInputVariables := fmi2Functions.fmi2SetReal(fmi2me, {2.0}, {x});
+      newStatesAvailable := fmi2Functions.fmi2EndEventUpdate(fmi2me);
       nextEventTime := fmi2Functions.fmi2nextEventTime(fmi2me, flowStatesInputs);
     end when;
+  protected
+    class FMI2ModelExchange
+      extends ExternalObject;
+  
+      function constructor
+        input Integer logLevel;
+        input String workingDirectory;
+        input String instanceName;
+        input Boolean debugLogging;
+        output FMI2ModelExchange fmi2me;
+      
+        external "C" fmi2me = FMI2ModelExchangeConstructor_OMC(logLevel, workingDirectory, instanceName, debugLogging) annotation(
+          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
+      end constructor;
+  
+      function destructor
+        input FMI2ModelExchange fmi2me;
+      
+        external "C" FMI2ModelExchangeDestructor_OMC(fmi2me) annotation(
+          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
+      end destructor;
+    end FMI2ModelExchange;
+  
+    package fmi2Functions
+      function fmi2SetupExperiment
+        input FMI2ModelExchange fmi2me;
+        input Boolean inToleranceDefined;
+        input Real inTolerance;
+        input Real inStartTime;
+        input Boolean inStopTimeDefined;
+        input Real inStopTime;
+        input Real inFlow;
+        output Real outFlow = inFlow;
+      
+        external "C" fmi2SetupExperiment_OMC(fmi2me, inToleranceDefined, inTolerance, inStartTime, inStopTimeDefined, inStopTime) annotation(
+          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
+      end fmi2SetupExperiment;
+  
+      function fmi2SetTime
+        input FMI2ModelExchange fmi2me;
+        input Real inTime;
+        input Real inFlow;
+        output Real outFlow = inFlow;
+      
+        external "C" fmi2SetTime_OMC(fmi2me, inTime) annotation(
+          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
+      end fmi2SetTime;
+  
+      function fmi2EnterInitialization
+        input FMI2ModelExchange fmi2me;
+        input Real inFlowVariable;
+        output Real outFlowVariable = inFlowVariable;
+      
+        external "C" fmi2EnterInitializationModel_OMC(fmi2me) annotation(
+          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
+      end fmi2EnterInitialization;
+  
+      function fmi2ExitInitialization
+        input FMI2ModelExchange fmi2me;
+        input Real inFlowVariable;
+        output Real outFlowVariable = inFlowVariable;
+      
+        external "C" fmi2ExitInitializationModel_OMC(fmi2me) annotation(
+          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
+      end fmi2ExitInitialization;
+  
+      function fmi2GetContinuousStates
+        input FMI2ModelExchange fmi2me;
+        input Integer numberOfContinuousStates;
+        input Real inFlowParams;
+        output Real fmi_x[numberOfContinuousStates];
+      
+        external "C" fmi2GetContinuousStates_OMC(fmi2me, numberOfContinuousStates, inFlowParams, fmi_x) annotation(
+          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
+      end fmi2GetContinuousStates;
+  
+      function fmi2SetContinuousStates
+        input FMI2ModelExchange fmi2me;
+        input Real fmi_x[:];
+        input Real inFlowParams;
+        output Real outFlowStates;
+      
+        external "C" outFlowStates = fmi2SetContinuousStates_OMC(fmi2me, size(fmi_x, 1), inFlowParams, fmi_x) annotation(
+          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
+      end fmi2SetContinuousStates;
+  
+      function fmi2GetDerivatives
+        input FMI2ModelExchange fmi2me;
+        input Integer numberOfContinuousStates;
+        input Real inFlowStates;
+        output Real fmi_x[numberOfContinuousStates];
+      
+        external "C" fmi2GetDerivatives_OMC(fmi2me, numberOfContinuousStates, inFlowStates, fmi_x) annotation(
+          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
+      end fmi2GetDerivatives;
+  
+      function fmi2GetEventIndicators
+        input FMI2ModelExchange fmi2me;
+        input Integer numberOfEventIndicators;
+        input Real inFlowStates;
+        output Real fmi_z[numberOfEventIndicators];
+      
+        external "C" fmi2GetEventIndicators_OMC(fmi2me, numberOfEventIndicators, inFlowStates, fmi_z) annotation(
+          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
+      end fmi2GetEventIndicators;
+  
+      function fmi2GetReal
+        input FMI2ModelExchange fmi2me;
+        input Real realValuesReferences[:];
+        input Real inFlowStatesInput;
+        output Real realValues[size(realValuesReferences, 1)];
+      
+        external "C" fmi2GetReal_OMC(fmi2me, size(realValuesReferences, 1), realValuesReferences, inFlowStatesInput, realValues, 1) annotation(
+          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
+      end fmi2GetReal;
+  
+      function fmi2SetReal
+        input FMI2ModelExchange fmi2me;
+        input Real realValueReferences[:];
+        input Real realValues[size(realValueReferences, 1)];
+        output Real outValues[size(realValueReferences, 1)] = realValues;
+      
+        external "C" fmi2SetReal_OMC(fmi2me, size(realValueReferences, 1), realValueReferences, realValues, 1) annotation(
+          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
+      end fmi2SetReal;
+  
+      function fmi2SetRealParameter
+        input FMI2ModelExchange fmi2me;
+        input Real realValueReferences[:];
+        input Real realValues[size(realValueReferences, 1)];
+        output Real out_Value = 1;
+      
+        external "C" fmi2SetReal_OMC(fmi2me, size(realValueReferences, 1), realValueReferences, realValues, 1) annotation(
+          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
+      end fmi2SetRealParameter;
+  
+      function fmi2GetInteger
+        input FMI2ModelExchange fmi2me;
+        input Real integerValueReferences[:];
+        input Real inFlowStatesInput;
+        output Integer integerValues[size(integerValueReferences, 1)];
+      
+        external "C" fmi2GetInteger_OMC(fmi2me, size(integerValueReferences, 1), integerValueReferences, inFlowStatesInput, integerValues, 1) annotation(
+          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
+      end fmi2GetInteger;
+  
+      function fmi2SetInteger
+        input FMI2ModelExchange fmi2me;
+        input Real integerValuesReferences[:];
+        input Integer integerValues[size(integerValuesReferences, 1)];
+        output Integer outValues[size(integerValuesReferences, 1)] = integerValues;
+      
+        external "C" fmi2SetInteger_OMC(fmi2me, size(integerValuesReferences, 1), integerValuesReferences, integerValues, 1) annotation(
+          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
+      end fmi2SetInteger;
+  
+      function fmi2SetIntegerParameter
+        input FMI2ModelExchange fmi2me;
+        input Real integerValuesReferences[:];
+        input Integer integerValues[size(integerValuesReferences, 1)];
+        output Real out_Value = 1;
+      
+        external "C" fmi2SetInteger_OMC(fmi2me, size(integerValuesReferences, 1), integerValuesReferences, integerValues, 1) annotation(
+          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
+      end fmi2SetIntegerParameter;
+  
+      function fmi2GetBoolean
+        input FMI2ModelExchange fmi2me;
+        input Real booleanValuesReferences[:];
+        input Real inFlowStatesInput;
+        output Boolean booleanValues[size(booleanValuesReferences, 1)];
+      
+        external "C" fmi2GetBoolean_OMC(fmi2me, size(booleanValuesReferences, 1), booleanValuesReferences, inFlowStatesInput, booleanValues, 1) annotation(
+          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
+      end fmi2GetBoolean;
+  
+      function fmi2SetBoolean
+        input FMI2ModelExchange fmi2me;
+        input Real booleanValueReferences[:];
+        input Boolean booleanValues[size(booleanValueReferences, 1)];
+        output Boolean outValues[size(booleanValueReferences, 1)] = booleanValues;
+      
+        external "C" fmi2SetBoolean_OMC(fmi2me, size(booleanValueReferences, 1), booleanValueReferences, booleanValues, 1) annotation(
+          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
+      end fmi2SetBoolean;
+  
+      function fmi2SetBooleanParameter
+        input FMI2ModelExchange fmi2me;
+        input Real booleanValueReferences[:];
+        input Boolean booleanValues[size(booleanValueReferences, 1)];
+        output Real out_Value = 1;
+      
+        external "C" fmi2SetBoolean_OMC(fmi2me, size(booleanValueReferences, 1), booleanValueReferences, booleanValues, 1) annotation(
+          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
+      end fmi2SetBooleanParameter;
+  
+      function fmi2GetString
+        input FMI2ModelExchange fmi2me;
+        input Real stringValuesReferences[:];
+        input Real inFlowStatesInput;
+        output String stringValues[size(stringValuesReferences, 1)];
+      
+        external "C" fmi2GetString_OMC(fmi2me, size(stringValuesReferences, 1), stringValuesReferences, inFlowStatesInput, stringValues, 1) annotation(
+          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
+      end fmi2GetString;
+  
+      function fmi2SetString
+        input FMI2ModelExchange fmi2me;
+        input Real stringValueReferences[:];
+        input String stringValues[size(stringValueReferences, 1)];
+        output String outValues[size(stringValueReferences, 1)] = stringValues;
+      
+        external "C" fmi2SetString_OMC(fmi2me, size(stringValueReferences, 1), stringValueReferences, stringValues, 1) annotation(
+          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
+      end fmi2SetString;
+  
+      function fmi2SetStringParameter
+        input FMI2ModelExchange fmi2me;
+        input Real stringValueReferences[:];
+        input String stringValues[size(stringValueReferences, 1)];
+        output Real out_Value = 1;
+      
+        external "C" fmi2SetString_OMC(fmi2me, size(stringValueReferences, 1), stringValueReferences, stringValues, 1) annotation(
+          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
+      end fmi2SetStringParameter;
+  
+      function fmi2StartEventUpdate
+        input FMI2ModelExchange fmi2me;
+      
+        external "C" fmi2StartEventUpdate_OMC(fmi2me) annotation(
+          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
+      end fmi2StartEventUpdate;
+  
+      function fmi2EndEventUpdate
+        input FMI2ModelExchange fmi2me;
+        output Boolean outNewStatesAvailable;
+      
+        external "C" outNewStatesAvailable = fmi2EndEventUpdate_OMC(fmi2me) annotation(
+          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
+      end fmi2EndEventUpdate;
+  
+      function fmi2nextEventTime
+        input FMI2ModelExchange fmi2me;
+        input Real inFlowStates;
+        output Real outNewnextTime;
+      
+        external "C" outNewnextTime = fmi2nextEventTime_OMC(fmi2me, inFlowStates) annotation(
+          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
+      end fmi2nextEventTime;
+  
+      function fmi2CompletedIntegratorStep
+        input FMI2ModelExchange fmi2me;
+        input Real inFlowStates;
+        output Boolean outCallEventUpdate;
+      
+        external "C" outCallEventUpdate = fmi2CompletedIntegratorStep_OMC(fmi2me, inFlowStates) annotation(
+          Library = {"OpenModelicaFMIRuntimeC", "fmilib"});
+      end fmi2CompletedIntegratorStep;
+    end fmi2Functions;
     annotation(
       Icon(graphics = {Rectangle(extent = {{-100, 100}, {100, -100}}, lineColor = {0, 0, 0}, fillColor = {240, 240, 240}, fillPattern = FillPattern.Solid, lineThickness = 0.5), Text(extent = {{-100, 40}, {100, 0}}, lineColor = {0, 0, 0}, textString = "%name"), Text(extent = {{-100, -50}, {100, -90}}, lineColor = {0, 0, 0}, textString = "V2.0")}));
     annotation(
       experiment(StartTime = 0.0, StopTime = 1.0, Tolerance = 1e-06));
-  end abc_me_FMU;
+  end Scheibenlaeufer_me_FMU;
   annotation(
     uses(Modelica(version = "4.0.0")));
 end Auswertung;

@@ -2,7 +2,7 @@
 <SimulatorModelDescription
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   fmiVersion="2.0"
-  modelName="abc"
+  modelName="Scheibenlaeufer"
   description="Input data for a Simulator FMU"
   generationTool="SimulatorToFMU">
   <ModelVariables>
@@ -15,7 +15,7 @@
     </ScalarVariable>
     <ScalarVariable
       name="x"
-      description="Voltage"
+      description="Eingangsspannung"
       causality="input"
 	  type="Real"
 	  unit="V"
@@ -23,7 +23,7 @@
     </ScalarVariable>
     <ScalarVariable
       name="y"
-      description="Current"
+      description="Generatorspannung"
       causality="output"
 	  type="Real"
 	  unit="V">
