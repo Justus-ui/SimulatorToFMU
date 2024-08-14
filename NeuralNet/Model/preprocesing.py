@@ -1,13 +1,12 @@
 """ This Script looks at ther given Measurementdata and returns the non linear-part of the measurement as we know apriori the outsputs when the prvoided Signal is 0 and when the 
     System is no longer oscialating disregarding noise
 """
-import random
 import os
 import logging as log
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from scipy.signal import butter,lfilter, freqz
+from scipy.signal import butter,lfilter
 import torch
 from torch.utils.data import TensorDataset, random_split
 
@@ -53,7 +52,9 @@ def load_data(show_data = False, minmim_delta = 0.0, window_length = 0.5) -> "Ge
         This function returns a dataframe which has a sequence of zeros for atmost 100ms.
         Also the dataframe will only contain the part of the signal for which the signal is still oscialation eg some delta
     """
-    path = r'C:\Users\JP\Documents\TU Berlin\ProjekteMDT_clea\SimulatorToFMU\NeuralNet\Data\Train_Data'
+    dirname = os.path.dirname(__file__)
+    path = os.path.abspath(os.path.join(dirname, "../Data/Train_Data"))
+    #path = r'C:\Users\JP\Documents\TU Berlin\ProjekteMDT_clea\SimulatorToFMU\NeuralNet\Data\Train_Data'
     data = os.listdir(path)
     for i,files in enumerate(data):
         df = pd.read_csv(os.path.join(path, files))

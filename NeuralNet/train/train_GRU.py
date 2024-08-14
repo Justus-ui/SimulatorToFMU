@@ -75,7 +75,8 @@ def train(model: "object", batch_size: "int", epochs: "int", Length_of_sample_s:
     return loss_nd, DataLoader(test_data, batch_size = batch_size, shuffle = True)
     
 def visualize_model_prediction(model, file_name, sr):
-    base_path = r'C:\Users\JP\Documents\TU Berlin\ProjekteMDT_clea\SimulatorToFMU\NeuralNet\Data\Test_Data'
+    base_path = os.path.abspath(os.path.join(dirname, "../Data/Test_Data"))
+    #base_path = r'C:\Users\JP\Documents\TU Berlin\ProjekteMDT_clea\SimulatorToFMU\NeuralNet\Data\Test_Data'
     path = os.path.join(base_path, file_name)
     df = pd.read_csv(path)
     sample = df.loc[((df["Zeit[s]"] * 10000).astype(int) % (sr * 10000)) == 0]["Ue"].to_numpy()
@@ -94,7 +95,7 @@ def visualize_model_prediction(model, file_name, sr):
 
 if __name__ == "__main__":
     ## Adjustable parameters
-    show_data = True # will show some nice plots
+    show_data = False # will show some nice plots
     use_filter = False # will apply a 100 Hz lowpass to the measured signal
     minimum_delta = 0.1 # the minimal change in function value over a timeperiod 500 (tbd) ms to use as learning parameter, one has to be sure to chose delta, s.t the signal is continous to verify set show_data = True
 

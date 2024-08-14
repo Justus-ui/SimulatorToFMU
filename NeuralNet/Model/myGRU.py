@@ -64,6 +64,9 @@ class GRUNet(nn.Module):
             h = self.init_hidden(1)
             tensor = x[i,1: int(x[i,0].item())]
             tensor = tensor[None, :]
+            #print(tensor)
+            #print(tensor.shape)
+            #input("Checked dim?")
             out, h = self(tensor,h)
             output[i] = out
         return output
