@@ -29,7 +29,7 @@ class Simulator():
         return model, model.get_sr()
 
 
-    def doTimeStep(self, input_value):
+    def doTimeStep(self, input_value)
         """
         This function returns the predicted new output
         """

@@ -73,8 +73,8 @@ def load_data(show_data = False, minmim_delta = 0.0, window_length = 0.5) -> "Ge
         df["filtered_signal"] = butter_lowpass_filter(df["Generatorspannung[V]"].to_numpy())
 
         if show_data:
-            plt.plot(df["Zeit[s]"], df["Generatorspannung[V]"], label = "signal")
-            plt.plot(df["Zeit[s]"].loc[df["is_oscilating"] == 1], df["Generatorspannung[V]"].loc[df["is_oscilating"] == 1], label = "filtered", color = "orange")
+            plt.plot(df["Zeit[s]"], df["Generatorspannung[V]"], label = "original signal")
+            plt.plot(df["Zeit[s]"].loc[df["is_oscilating"] == 1], df["Generatorspannung[V]"].loc[df["is_oscilating"] == 1], label = "shortened signal", color = "orange")
             plt.title("Part of the signal with sufficient change")
             plt.legend()
             plt.show()
@@ -86,7 +86,7 @@ def load_data(show_data = False, minmim_delta = 0.0, window_length = 0.5) -> "Ge
 
         yield df.loc[df["is_oscilating"] == 1]
 
-def get_data(model : "object", Length_of_sample_s, sr:"int" = 0.0001, show_data = False, use_filter = True, minimum_delta = 0.0) -> "TensorDataset":
+def get_data(model : "object", Length_of_sample_s, sr:"float" = 0.0001, show_data = False, use_filter = True, minimum_delta = 0.0) -> "TensorDataset":
     """
         returns a TensorDataset already split. 
     """

@@ -4,7 +4,7 @@ block Generator
   parameter Real L=0.375e-3;
   parameter Real cu=0.3248e-3;
   parameter Real J=47.5e-6;
-  parameter Real RL = 10;
+  parameter Real RL = 100;
   Modelica.Blocks.Math.Gain gain(k = 1/J) annotation(
     Placement(visible = true, transformation(origin = {-38, 78}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Blocks.Math.Add3 add3(k1 = 1, k2 = -1, k3 = -1) annotation(

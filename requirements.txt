@@ -1,5 +1,5 @@
-torch == 1.13.1
-numpy == 1.21.6
+torch == 2.3.0
+numpy == 1.21.1
 lxml
 jinja2
-pandas
+pandas == 2.0.3
